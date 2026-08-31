@@ -1,7 +1,7 @@
+import AppShell from './features/layout/AppShell';
+
 function App() {
-  return (
-    <h1>Lily</h1>
-  )
+  return <AppShell />;
 }
 
-export default App
+export default App;
