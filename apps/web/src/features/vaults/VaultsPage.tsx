@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { EmptyState, ErrorState, LoadingState } from '@/components/States';
-import { UserMenu } from '@/features/layout/UserMenu';
+import { AppHeader } from '@/features/layout/AppHeader';
 import type { Vault } from '@/types/api';
 import { useVaults } from './useVaults';
 import { CreateVaultDialog, DeleteVaultDialog, RenameVaultDialog } from './VaultDialogs';
@@ -23,13 +23,7 @@ export function VaultsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="flex items-center justify-between border-b px-6 py-4">
-        <Link to="/vaults" className="flex items-center gap-2">
-          <img src="/favicon.svg" alt="" className="size-7" />
-          <span className="text-xl font-semibold tracking-tight text-primary">Lily</span>
-        </Link>
-        <UserMenu />
-      </header>
+      <AppHeader />
 
       <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">

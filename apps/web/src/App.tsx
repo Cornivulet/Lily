@@ -10,6 +10,7 @@ import { RegisterPage } from '@/features/auth/RegisterPage';
 import { GraphPage } from '@/features/graph/GraphPage';
 import { VaultLayout } from '@/features/layout/VaultLayout';
 import { NotePage, VaultHome } from '@/features/notes/NotePage';
+import { SettingsPage } from '@/features/settings/SettingsPage';
 import { lastVaultId } from '@/features/vaults/useVaults';
 import { VaultsPage } from '@/features/vaults/VaultsPage';
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/vaults', element: <VaultsPage /> },
+      { path: '/settings', element: <SettingsPage /> },
       {
         path: '/vaults/:vaultId',
         element: <VaultLayout />,
