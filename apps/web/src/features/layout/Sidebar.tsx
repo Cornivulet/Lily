@@ -1,7 +1,14 @@
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
+import type { Note } from '@/src/types/Note';
 
-const Sidebar = () => (
+type SidebarProps = {
+  notes: Note[];
+  selectedNote: Note | null;
+  onSelectedNote: (note: Note) => void;
+};
+
+const Sidebar = ({ notes, selectedNote, onSelectedNote }: SidebarProps) => (
   <aside className="flex h-screen flex-col p-4 bg-primary text-primary-foreground">
     <header className="mb-4">
       <h1 className="text-2xl font-semibold tracking-tight">Lily</h1>
@@ -12,23 +19,18 @@ const Sidebar = () => (
       <h2 className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider opacity-60">
         Explorer
       </h2>
-      <ul className="space-y-1">
-        <li>
-          <Button className="w-full justify-start rounded-md px-3 py-2 text-sm transition-colors hover:bg-primary-foreground/10">
-            Note 1
+      <div className="flex flex-col gap-1">
+        {notes.map((note) => (
+          <Button
+            key={note.id}
+            variant={selectedNote?.id === note.id ? 'secondary' : 'ghost'}
+            className="justify-start"
+            onClick={() => onSelectedNote(note)}
+          >
+            {note.title}
           </Button>
-        </li>
-        <li>
-          <Button className="w-full justify-start rounded-md px-3 py-2  text-sm transition-colors hover:bg-primary-foreground/10">
-            Note 2
-          </Button>
-        </li>
-        <li>
-          <Button className="w-full justify-start rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-primary-foreground/10">
-            Projects
-          </Button>
-        </li>
-      </ul>
+        ))}
+      </div>
     </nav>
     <Separator className="bg-primary-foreground/20" />
 

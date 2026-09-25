@@ -1,0 +1,9 @@
+// use prisma-next
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+}
