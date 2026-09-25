@@ -1,9 +1,101 @@
-// use prisma-next
+// Lily data contract (Prisma Next).
+// After editing: `npm run contract:emit` then `npm run db:update` (dev database).
+
+model User {
+  id           String @id @default(uuid())
+  email        String @unique
+  passwordHash String
+  vaults       Vault[]
+  createdAt    temporal.createdAtString()
+  updatedAt    temporal.updatedAtString()
+
+  @@map("users")
+}
+
+model Vault {
+  id        String @id @default(uuid())
+  name      String
+  ownerId   String
+  owner     User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  notes     Note[]
+  folders   Folder[]
+  tags      Tag[]
+  createdAt temporal.createdAtString()
+  updatedAt temporal.updatedAtString()
+
+  @@unique([ownerId, name])
+  @@map("vaults")
+}
+
+model Folder {
+  id        String  @id @default(uuid())
+  name      String
+  vaultId   String
+  vault     Vault   @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Folder? @relation("tree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Folder[] @relation("tree")
+  notes     Note[]
+  createdAt temporal.createdAtString()
+  updatedAt temporal.updatedAtString()
+
+  @@index([vaultId])
+  @@map("folders")
+}
 
 model Note {
-  id        String   @id @default(uuid())
+  id        String  @id @default(uuid())
   title     String
   content   String
-  createdAt TimestamptzString @default(now())
+  vaultId   String
+  vault     Vault   @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+  folderId  String?
+  folder    Folder? @relation(fields: [folderId], references: [id], onDelete: Restrict)
+  outgoing  NoteLink[] @relation("outgoing")
+  incoming  NoteLink[] @relation("incoming")
+  tags      NoteTag[]
+  createdAt temporal.createdAtString()
   updatedAt temporal.updatedAtString()
+
+  // A title identifies a note inside its vault for [[wikilinks]] (case-insensitive).
+  @@index(expression: "\"vaultId\", lower(title)", unique: true, name: "notes_vault_title_ci")
+  @@index([vaultId])
+  @@map("notes")
+}
+
+// Derived index of the [[wikilinks]] found in a note's content.
+model NoteLink {
+  id           String  @id @default(uuid())
+  sourceNoteId String
+  source       Note    @relation("outgoing", fields: [sourceNoteId], references: [id], onDelete: Cascade)
+  targetNoteId String?
+  target       Note?   @relation("incoming", fields: [targetNoteId], references: [id], onDelete: SetNull)
+  // Normalized (lower-cased, trimmed) target title, kept to resolve links later.
+  targetTitle  String
+
+  @@unique([sourceNoteId, targetTitle])
+  @@index([targetNoteId])
+  @@map("note_links")
+}
+
+model Tag {
+  id      String @id @default(uuid())
+  name    String
+  vaultId String
+  vault   Vault  @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+  notes   NoteTag[]
+
+  @@unique([vaultId, name])
+  @@map("tags")
+}
+
+model NoteTag {
+  noteId String
+  note   Note   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, tagId])
+  @@index([tagId])
+  @@map("note_tags")
 }

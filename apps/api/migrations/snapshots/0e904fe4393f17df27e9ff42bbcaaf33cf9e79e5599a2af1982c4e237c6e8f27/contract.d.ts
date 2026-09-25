@@ -45,200 +45,68 @@ export type QueryOperationTypes = PgAdapterQueryOps<CodecTypes>;
 export type AggregateTypes = {
   readonly avg: {
     readonly byCodec: {
-      readonly 'pg/float@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float4@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float8@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/interval@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/numeric@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-string@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-temporal@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/unboundedint@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/float@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/int@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/float@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/float4@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/float8@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/interval@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/numeric@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/time-string@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/time-temporal@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/unboundedint@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'sql/float@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'sql/int@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
     };
   };
   readonly avgDecimal: {
     readonly byCodec: {
-      readonly 'pg/int@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/numeric@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/unboundedint@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/int@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/int@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/numeric@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/unboundedint@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'sql/int@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
     };
   };
   readonly count: {
     readonly byCodec: {};
-    readonly withoutInput: {
-      readonly output: 'pg/int8number@1';
-      readonly nullable: false;
-    };
-    readonly anyInput: {
-      readonly output: 'pg/int8number@1';
-      readonly nullable: false;
-    };
+    readonly withoutInput: { readonly output: 'pg/int8number@1'; readonly nullable: false };
+    readonly anyInput: { readonly output: 'pg/int8number@1'; readonly nullable: false };
   };
   readonly countBigInt: {
     readonly byCodec: {};
-    readonly withoutInput: {
-      readonly output: 'pg/int8@1';
-      readonly nullable: false;
-    };
-    readonly anyInput: {
-      readonly output: 'pg/int8@1';
-      readonly nullable: false;
-    };
+    readonly withoutInput: { readonly output: 'pg/int8@1'; readonly nullable: false };
+    readonly anyInput: { readonly output: 'pg/int8@1'; readonly nullable: false };
   };
   readonly max: {
     readonly byCodec: {
-      readonly 'pg/char@1': {
-        readonly output: 'pg/char@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/date-string@1': {
-        readonly output: 'pg/date-string@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/char@1': { readonly output: 'pg/char@1'; readonly nullable: true };
+      readonly 'pg/date-string@1': { readonly output: 'pg/date-string@1'; readonly nullable: true };
       readonly 'pg/date-temporal@1': {
         readonly output: 'pg/date-temporal@1';
         readonly nullable: true;
       };
-      readonly 'pg/enum@1': {
-        readonly output: 'pg/enum@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float@1': {
-        readonly output: 'pg/float@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float4@1': {
-        readonly output: 'pg/float4@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float8@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/inet@1': {
-        readonly output: 'pg/inet@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int@1': {
-        readonly output: 'pg/int@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/int2@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/int4@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/interval@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/numeric@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/text-array@1': {
-        readonly output: 'pg/text-array@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/text@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-string@1': {
-        readonly output: 'pg/time-string@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/enum@1': { readonly output: 'pg/enum@1'; readonly nullable: true };
+      readonly 'pg/float@1': { readonly output: 'pg/float@1'; readonly nullable: true };
+      readonly 'pg/float4@1': { readonly output: 'pg/float4@1'; readonly nullable: true };
+      readonly 'pg/float8@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/inet@1': { readonly output: 'pg/inet@1'; readonly nullable: true };
+      readonly 'pg/int@1': { readonly output: 'pg/int@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/int2@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/int4@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/interval@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/numeric@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/text-array@1': { readonly output: 'pg/text-array@1'; readonly nullable: true };
+      readonly 'pg/text@1': { readonly output: 'pg/text@1'; readonly nullable: true };
+      readonly 'pg/time-string@1': { readonly output: 'pg/time-string@1'; readonly nullable: true };
       readonly 'pg/time-temporal@1': {
         readonly output: 'pg/time-temporal@1';
         readonly nullable: true;
@@ -259,114 +127,42 @@ export type AggregateTypes = {
         readonly output: 'pg/timestamptz-temporal@1';
         readonly nullable: true;
       };
-      readonly 'pg/timetz@1': {
-        readonly output: 'pg/timetz@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/timetz@1': { readonly output: 'pg/timetz@1'; readonly nullable: true };
       readonly 'pg/unboundedint@1': {
         readonly output: 'pg/unboundedint@1';
         readonly nullable: true;
       };
-      readonly 'pg/varchar@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/char@1': {
-        readonly output: 'sql/char@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/float@1': {
-        readonly output: 'sql/float@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/int@1': {
-        readonly output: 'sql/int@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/text@1': {
-        readonly output: 'sql/text@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/varchar@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/varchar@1': { readonly output: 'pg/text@1'; readonly nullable: true };
+      readonly 'sql/char@1': { readonly output: 'sql/char@1'; readonly nullable: true };
+      readonly 'sql/float@1': { readonly output: 'sql/float@1'; readonly nullable: true };
+      readonly 'sql/int@1': { readonly output: 'sql/int@1'; readonly nullable: true };
+      readonly 'sql/text@1': { readonly output: 'sql/text@1'; readonly nullable: true };
+      readonly 'sql/varchar@1': { readonly output: 'pg/text@1'; readonly nullable: true };
     };
   };
   readonly min: {
     readonly byCodec: {
-      readonly 'pg/char@1': {
-        readonly output: 'pg/char@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/date-string@1': {
-        readonly output: 'pg/date-string@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/char@1': { readonly output: 'pg/char@1'; readonly nullable: true };
+      readonly 'pg/date-string@1': { readonly output: 'pg/date-string@1'; readonly nullable: true };
       readonly 'pg/date-temporal@1': {
         readonly output: 'pg/date-temporal@1';
         readonly nullable: true;
       };
-      readonly 'pg/enum@1': {
-        readonly output: 'pg/enum@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float@1': {
-        readonly output: 'pg/float@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float4@1': {
-        readonly output: 'pg/float4@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float8@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/inet@1': {
-        readonly output: 'pg/inet@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int@1': {
-        readonly output: 'pg/int@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/int2@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/int4@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/interval@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/numeric@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/text-array@1': {
-        readonly output: 'pg/text-array@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/text@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-string@1': {
-        readonly output: 'pg/time-string@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/enum@1': { readonly output: 'pg/enum@1'; readonly nullable: true };
+      readonly 'pg/float@1': { readonly output: 'pg/float@1'; readonly nullable: true };
+      readonly 'pg/float4@1': { readonly output: 'pg/float4@1'; readonly nullable: true };
+      readonly 'pg/float8@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/inet@1': { readonly output: 'pg/inet@1'; readonly nullable: true };
+      readonly 'pg/int@1': { readonly output: 'pg/int@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/int2@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/int4@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/interval@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/numeric@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/text-array@1': { readonly output: 'pg/text-array@1'; readonly nullable: true };
+      readonly 'pg/text@1': { readonly output: 'pg/text@1'; readonly nullable: true };
+      readonly 'pg/time-string@1': { readonly output: 'pg/time-string@1'; readonly nullable: true };
       readonly 'pg/time-temporal@1': {
         readonly output: 'pg/time-temporal@1';
         readonly nullable: true;
@@ -387,141 +183,57 @@ export type AggregateTypes = {
         readonly output: 'pg/timestamptz-temporal@1';
         readonly nullable: true;
       };
-      readonly 'pg/timetz@1': {
-        readonly output: 'pg/timetz@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/timetz@1': { readonly output: 'pg/timetz@1'; readonly nullable: true };
       readonly 'pg/unboundedint@1': {
         readonly output: 'pg/unboundedint@1';
         readonly nullable: true;
       };
-      readonly 'pg/varchar@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/char@1': {
-        readonly output: 'sql/char@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/float@1': {
-        readonly output: 'sql/float@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/int@1': {
-        readonly output: 'sql/int@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/text@1': {
-        readonly output: 'sql/text@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/varchar@1': {
-        readonly output: 'pg/text@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/varchar@1': { readonly output: 'pg/text@1'; readonly nullable: true };
+      readonly 'sql/char@1': { readonly output: 'sql/char@1'; readonly nullable: true };
+      readonly 'sql/float@1': { readonly output: 'sql/float@1'; readonly nullable: true };
+      readonly 'sql/int@1': { readonly output: 'sql/int@1'; readonly nullable: true };
+      readonly 'sql/text@1': { readonly output: 'sql/text@1'; readonly nullable: true };
+      readonly 'sql/varchar@1': { readonly output: 'pg/text@1'; readonly nullable: true };
     };
   };
   readonly sum: {
     readonly byCodec: {
-      readonly 'pg/float@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float4@1': {
-        readonly output: 'pg/float4@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/float8@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/interval@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/numeric@1': {
-        readonly output: 'pg/numeric@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-string@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/time-temporal@1': {
-        readonly output: 'pg/interval@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/float@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/float4@1': { readonly output: 'pg/float4@1'; readonly nullable: true };
+      readonly 'pg/float8@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'pg/int@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
+      readonly 'pg/interval@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/numeric@1': { readonly output: 'pg/numeric@1'; readonly nullable: true };
+      readonly 'pg/time-string@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
+      readonly 'pg/time-temporal@1': { readonly output: 'pg/interval@1'; readonly nullable: true };
       readonly 'pg/unboundedint@1': {
         readonly output: 'pg/unboundedint@1';
         readonly nullable: true;
       };
-      readonly 'sql/float@1': {
-        readonly output: 'pg/float8@1';
-        readonly nullable: true;
-      };
-      readonly 'sql/int@1': {
-        readonly output: 'pg/int8number@1';
-        readonly nullable: true;
-      };
+      readonly 'sql/float@1': { readonly output: 'pg/float8@1'; readonly nullable: true };
+      readonly 'sql/int@1': { readonly output: 'pg/int8number@1'; readonly nullable: true };
     };
   };
   readonly sumBigInt: {
     readonly byCodec: {
-      readonly 'pg/int@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int2@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int4@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8@1': {
-        readonly output: 'pg/unboundedint@1';
-        readonly nullable: true;
-      };
-      readonly 'pg/int8number@1': {
-        readonly output: 'pg/unboundedint@1';
-        readonly nullable: true;
-      };
+      readonly 'pg/int@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
+      readonly 'pg/int2@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
+      readonly 'pg/int4@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
+      readonly 'pg/int8@1': { readonly output: 'pg/unboundedint@1'; readonly nullable: true };
+      readonly 'pg/int8number@1': { readonly output: 'pg/unboundedint@1'; readonly nullable: true };
       readonly 'pg/unboundedint@1': {
         readonly output: 'pg/unboundedint@1';
         readonly nullable: true;
       };
-      readonly 'sql/int@1': {
-        readonly output: 'pg/int8@1';
-        readonly nullable: true;
-      };
+      readonly 'sql/int@1': { readonly output: 'pg/int8@1'; readonly nullable: true };
     };
   };
 };
-type DefaultLiteralValue<
-  CodecId extends string,
-  Encoded,
-> = CodecId extends keyof CodecTypes
+type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyof CodecTypes
   ? Encoded extends CodecTypes[CodecId]['json']
     ? Encoded
     : CodecTypes[CodecId]['json']
@@ -771,10 +483,7 @@ type ContractBase = Omit<
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'now()';
-                  };
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
@@ -849,9 +558,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [
-                { readonly columns: readonly ['sourceNoteId', 'targetTitle'] },
-              ];
+              uniques: readonly [{ readonly columns: readonly ['sourceNoteId', 'targetTitle'] }];
               indexes: readonly [
                 {
                   readonly name: 'note_links_targetNoteId_idx_37a5ad18';
@@ -980,10 +687,7 @@ type ContractBase = Omit<
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'now()';
-                  };
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
@@ -1059,9 +763,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [
-                { readonly columns: readonly ['vaultId', 'name'] },
-              ];
+              uniques: readonly [{ readonly columns: readonly ['vaultId', 'name'] }];
               indexes: readonly [
                 {
                   readonly name: 'tags_vaultId_idx_5c1e623c';
@@ -1106,10 +808,7 @@ type ContractBase = Omit<
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'now()';
-                  };
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
@@ -1143,10 +842,7 @@ type ContractBase = Omit<
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'now()';
-                  };
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
@@ -1155,9 +851,7 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [
-                { readonly columns: readonly ['ownerId', 'name'] },
-              ];
+              uniques: readonly [{ readonly columns: readonly ['ownerId', 'name'] }];
               indexes: readonly [
                 {
                   readonly name: 'vaults_ownerId_idx_e2d0c1ef';
@@ -1192,34 +886,13 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
-    readonly users: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'User';
-    };
-    readonly vaults: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'Vault';
-    };
-    readonly folders: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'Folder';
-    };
-    readonly notes: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'Note';
-    };
-    readonly note_links: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'NoteLink';
-    };
-    readonly tags: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'Tag';
-    };
-    readonly note_tags: {
-      readonly namespace: 'public' & NamespaceId;
-      readonly model: 'NoteTag';
-    };
+    readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+    readonly vaults: { readonly namespace: 'public' & NamespaceId; readonly model: 'Vault' };
+    readonly folders: { readonly namespace: 'public' & NamespaceId; readonly model: 'Folder' };
+    readonly notes: { readonly namespace: 'public' & NamespaceId; readonly model: 'Note' };
+    readonly note_links: { readonly namespace: 'public' & NamespaceId; readonly model: 'NoteLink' };
+    readonly tags: { readonly namespace: 'public' & NamespaceId; readonly model: 'Tag' };
+    readonly note_tags: { readonly namespace: 'public' & NamespaceId; readonly model: 'NoteTag' };
   };
   readonly domain: {
     readonly namespaces: {
@@ -1229,31 +902,19 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly name: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly vaultId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly parentId: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly createdAt: {
                 readonly nullable: false;
@@ -1271,28 +932,6 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly children: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Folder';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['parentId'];
-                };
-              };
-              readonly notes: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Note';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['folderId'];
-                };
-              };
               readonly parent: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -1333,38 +972,23 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly title: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly content: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly vaultId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly folderId: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly createdAt: {
                 readonly nullable: false;
@@ -1391,39 +1015,6 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['folderId'];
                   readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly incoming: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'NoteLink';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['targetNoteId'];
-                };
-              };
-              readonly outgoing: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'NoteLink';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['sourceNoteId'];
-                };
-              };
-              readonly tags: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'NoteTag';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['noteId'];
                 };
               };
               readonly vault: {
@@ -1456,39 +1047,24 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly sourceNoteId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly targetNoteId: {
                 readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly targetTitle: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
               readonly source: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Note';
-                };
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Note' };
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['sourceNoteId'];
@@ -1496,10 +1072,7 @@ type ContractBase = Omit<
                 };
               };
               readonly target: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Note';
-                };
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Note' };
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['targetNoteId'];
@@ -1522,25 +1095,16 @@ type ContractBase = Omit<
             readonly fields: {
               readonly noteId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly tagId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
               readonly note: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Note';
-                };
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Note' };
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['noteId'];
@@ -1548,10 +1112,7 @@ type ContractBase = Omit<
                 };
               };
               readonly tag: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Tag';
-                };
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Tag' };
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['tagId'];
@@ -1572,38 +1133,18 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly name: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly vaultId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
-              readonly notes: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'NoteTag';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['tagId'];
-                };
-              };
               readonly vault: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -1630,24 +1171,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly email: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly passwordHash: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly createdAt: {
                 readonly nullable: false;
@@ -1664,19 +1196,7 @@ type ContractBase = Omit<
                 };
               };
             };
-            readonly relations: {
-              readonly vaults: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Vault';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['ownerId'];
-                };
-              };
-            };
+            readonly relations: Record<string, never>;
             readonly storage: {
               readonly table: 'users';
               readonly namespaceId: 'public';
@@ -1693,24 +1213,15 @@ type ContractBase = Omit<
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly name: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly ownerId: {
                 readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/text@1';
-                };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly createdAt: {
                 readonly nullable: false;
@@ -1728,48 +1239,12 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly folders: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Folder';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['vaultId'];
-                };
-              };
-              readonly notes: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Note';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['vaultId'];
-                };
-              };
               readonly owner: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'User';
-                };
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
                 readonly cardinality: 'N:1';
                 readonly on: {
                   readonly localFields: readonly ['ownerId'];
                   readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly tags: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Tag';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['vaultId'];
                 };
               };
             };
@@ -1818,10 +1293,7 @@ type ContractBase = Omit<
             readonly table: 'folders';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1829,14 +1301,8 @@ type ContractBase = Omit<
             readonly table: 'folders';
             readonly column: 'updatedAt';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
-          readonly onUpdate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
         },
         {
           readonly ref: {
@@ -1844,10 +1310,7 @@ type ContractBase = Omit<
             readonly table: 'note_links';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1855,10 +1318,7 @@ type ContractBase = Omit<
             readonly table: 'notes';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1866,14 +1326,8 @@ type ContractBase = Omit<
             readonly table: 'notes';
             readonly column: 'updatedAt';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
-          readonly onUpdate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
         },
         {
           readonly ref: {
@@ -1881,10 +1335,7 @@ type ContractBase = Omit<
             readonly table: 'tags';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1892,10 +1343,7 @@ type ContractBase = Omit<
             readonly table: 'users';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1903,14 +1351,8 @@ type ContractBase = Omit<
             readonly table: 'users';
             readonly column: 'updatedAt';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
-          readonly onUpdate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
         },
         {
           readonly ref: {
@@ -1918,10 +1360,7 @@ type ContractBase = Omit<
             readonly table: 'vaults';
             readonly column: 'id';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'uuidv4';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
         },
         {
           readonly ref: {
@@ -1929,14 +1368,8 @@ type ContractBase = Omit<
             readonly table: 'vaults';
             readonly column: 'updatedAt';
           };
-          readonly onCreate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
-          readonly onUpdate: {
-            readonly kind: 'generator';
-            readonly id: 'timestampNow';
-          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
+          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
         },
       ];
     };
