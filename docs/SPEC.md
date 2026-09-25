@@ -624,17 +624,23 @@ Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 
 
 ## M. État d'avancement & règles pour l'IA
 
-**Prochaine étape : Phase 0.**
+**Prochaine étape : Phase 9** (page Settings, tests front) — puis ajouter la CI restée en suspens depuis la Phase 1.
 
-| Phase | Statut |
-|---|---|
-| 0 — Remise en ordre | ⬜ |
-| 1 — Notes persistées | ⬜ (modèle `Note` 🟡 dans le contrat Prisma) |
-| 2 — Front branché | ⬜ (UI prototype 🟡) |
-| 3 — Auth | ⬜ |
-| 4 — Vaults | ⬜ |
-| 5 — Markdown + recherche | ⬜ |
-| 6+ | ⬜ |
+Mis à jour le 2026-09-26. Vérifié : `npm run lint`, `npm run build`, `npm test` (9 tests unitaires) et `npm run test:e2e` (13 tests) passent ; parcours API register → note → recherche → graphe testé à travers le proxy Vite. **L'interface n'a pas encore été testée dans un navigateur.**
+
+| Phase | Statut | Remarques |
+|---|---|---|
+| 0 — Remise en ordre | ✅ | Préfixe `/api`, proxy Vite, script `dev`, `.env.example` alignés. `Workspace` supprimé (remplacé par `NotePage`) |
+| 1 — Notes persistées | 🟡 | CRUD, validation et tests faits ; **CI GitHub Actions absente** |
+| 2 — Front branché | ✅ | React Router (data router) + TanStack Query, plus de données mockées |
+| 3 — Auth | ✅ | JWT en cookie httpOnly, guard global, argon2, `RequireAuth`, gestion du 401 |
+| 4 — Vaults | ✅ | Notes rattachées à un vault, vault par défaut, e2e d'isolation entre utilisateurs |
+| 5 — Markdown + recherche | ✅ | react-markdown + remark-gfm, recherche `ILIKE`. Démo manuelle des UC MVP à faire |
+| 6 — Wikilinks & backlinks | ✅ | Parser testé, index `NoteLink`, renommage qui réécrit les références |
+| 7 — Knowledge graph | ✅ | `react-force-graph-2d` (N-13 → option a). Fluidité à ~500 notes non mesurée |
+| 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri |
+| 9 — Compte & robustesse | 🟡 | Faits côté API : `PATCH /auth/password`, rate limiting. À faire : page Settings (le lien du menu utilisateur n'aboutit pas encore), tests front, `packages/shared` |
+| 10+ | ⬜ | |
 
 Règles quand on demande « implémente la prochaine fonctionnalité de Lily » :
 1. Prendre la première phase non terminée, la découper en étapes d'un commit chacune, les annoncer avant de coder.
