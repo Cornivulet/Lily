@@ -5,23 +5,22 @@
 > Niveaux de maturité utilisés partout : **MVP** · **V1** · **V2** · **Idée future** · **Hors scope**.
 > Statut d'implémentation : ✅ fait · 🟡 partiel/prototype · ⬜ à faire.
 
-## 0. État actuel du code (au 2026-09-25)
+## 0. État actuel du code (au 2026-09-26)
 
-Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé) :
+Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). Le détail par phase est dans §M.
 
 | Zone | État | Détail |
 |---|---|---|
-| Monorepo | ✅ | npm workspaces `apps/*`, `packages/*` (aucun package pour l'instant) |
-| `apps/web` | 🟡 prototype | React 19, Vite 8, TS 6, Tailwind v4, shadcn/ui (button, separator, textarea), Lucide |
-| Layout | 🟡 | `AppShell` (grille 240px + contenu) → `Sidebar` (branding, section « Explorer » listant les notes, bouton Settings) + `Workspace` (affichage/édition d'une note) |
-| Notes (front) | 🟡 | Données mockées dans `src/data/notes.ts`, type `src/types/Note.ts` ; édition via `Textarea` ; **Save ne persiste rien** (`console.log`) |
-| Projets dans l'UI | ⬜ | Pas présents dans le code actuel (le composant `MainContent` a été supprimé/remplacé par `Workspace`) |
-| `apps/api` | 🟡 squelette | NestJS 12 (ESM), Vitest, oxlint ; `NotesModule` avec `GET /notes` qui renvoie une chaîne |
-| Prisma | 🟡 | Prisma Next `8.0.0-rc` : `prisma.config.ts`, contrat `src/prisma/contract.prisma` avec un modèle `Note` (id uuid, title, content, createdAt, updatedAt), client dans `src/prisma/db.ts` — **pas encore utilisé par le service** |
+| Monorepo | ✅ | npm workspaces `apps/*` (aucun `packages/*` pour l'instant) ; scripts racine `dev`, `db:up`, `db:update`, `build`, `lint`, `test`, `test:e2e` |
+| `apps/api` | ✅ | NestJS 12 (ESM), préfixe `/api`, `ValidationPipe` (class-validator), Vitest, oxlint. Modules `auth`, `users`, `vaults`, `notes`, `folders`, `links`, `tags` |
+| Prisma | ✅ | Prisma Next `8.0.0-rc` ; contrat `src/prisma/contract.prisma` : `User`, `Vault`, `Folder`, `Note`, `NoteLink`, `Tag`, `NoteTag` |
+| Auth | ✅ | JWT en cookie httpOnly, guard global (`@Public()` pour les exceptions), argon2, rate limiting sur register/login/password |
+| Knowledge | ✅ | `[[wikilinks]]` et `#tags` indexés à chaque save ; renommage qui réécrit les références ; backlinks, liens sortants, graphe du vault et graphe local |
+| `apps/web` | ✅ | React 19, Vite 8, TS 6, Tailwind v4, shadcn/ui, React Router (data router), TanStack Query, react-markdown + remark-gfm, `react-force-graph-2d`, sonner. UI en français |
+| Écrans | ✅ | Login, Register, Vaults, Vault (sidebar : sélecteur de vault, recherche, filtres, arbre de dossiers/notes), Note (lecture/édition, aperçu, backlinks, graphe local), Graphe. **Settings absent** |
+| Tests | 🟡 | API : tests unitaires du parser Markdown, e2e (auth, isolation vaults/notes, knowledge) sur une base séparée. Web : aucun test. **Pas de CI** |
 | PostgreSQL | ✅ | `docker-compose.yml` : service `postgres:17` (user/pass/db `lily`), port 5432 |
-| Auth, vaults, liens, recherche | ⬜ | Rien |
-
-Points d'hygiène relevés : beaucoup de fichiers non commités (`apps/api/`, `docker-compose.yml`…) ; `.env.example` racine contient une URL générique qui ne correspond pas aux identifiants du compose ; le nom de composant `Workspace` entre en collision avec le vocabulaire produit (à renommer `NoteView` — cf. §I).
+| Déploiement | ⬜ | Rien (Phase 10) |
 
 ---
 
