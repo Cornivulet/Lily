@@ -15,4 +15,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Same origin for the browser: the session cookie just works, no CORS.
+    proxy: { '/api': 'http://localhost:3000' },
+  },
 });

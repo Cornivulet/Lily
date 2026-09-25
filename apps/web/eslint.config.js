@@ -24,6 +24,11 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
     rules: {
+      // A leading underscore marks a value deliberately left unused (e.g. omitted from a rest spread).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
+      ],
       'react-refresh/only-export-components': [
         'warn',
         {
