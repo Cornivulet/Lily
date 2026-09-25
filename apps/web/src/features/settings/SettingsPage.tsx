@@ -50,7 +50,9 @@ export function SettingsPage() {
             variant="outline"
             className="justify-self-start"
             disabled={logout.isPending}
-            onClick={() => logout.mutate(undefined, { onSettled: () => navigate('/login', { replace: true }) })}
+            onClick={() =>
+              logout.mutate(undefined, { onSettled: () => navigate('/login', { replace: true }) })
+            }
           >
             <LogOut /> Se déconnecter
           </Button>

@@ -21,7 +21,8 @@ export function PasswordForm() {
     else if (newPassword === currentPassword) {
       nextErrors.newPassword = 'Le nouveau mot de passe doit être différent de l’actuel';
     }
-    if (newPassword !== confirmation) nextErrors.confirmation = 'Les mots de passe ne correspondent pas';
+    if (newPassword !== confirmation)
+      nextErrors.confirmation = 'Les mots de passe ne correspondent pas';
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
