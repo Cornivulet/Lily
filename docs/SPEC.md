@@ -17,8 +17,8 @@ Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). L
 | Auth | ✅ | JWT en cookie httpOnly, guard global (`@Public()` pour les exceptions), argon2, rate limiting sur register/login/password |
 | Knowledge | ✅ | `[[wikilinks]]` et `#tags` indexés à chaque save ; renommage qui réécrit les références ; backlinks, liens sortants, graphe du vault et graphe local |
 | `apps/web` | ✅ | React 19, Vite 8, TS 6, Tailwind v4, shadcn/ui, React Router (data router), TanStack Query, react-markdown + remark-gfm, `react-force-graph-2d`, sonner. UI en français |
-| Écrans | ✅ | Login, Register, Vaults, Vault (sidebar : sélecteur de vault, recherche, filtres, arbre de dossiers/notes), Note (lecture/édition, aperçu, backlinks, graphe local), Graphe. **Settings absent** |
-| Tests | 🟡 | API : tests unitaires du parser Markdown, e2e (auth, isolation vaults/notes, knowledge) sur une base séparée. Web : aucun test. **Pas de CI** |
+| Écrans | ✅ | Login, Register, Vaults, Vault (sidebar : sélecteur de vault, recherche, filtres, arbre de dossiers/notes), Note (lecture/édition, aperçu, backlinks, graphe local), Graphe, Settings (profil, mot de passe, déconnexion) |
+| Tests | 🟡 | API : tests unitaires du parser Markdown, e2e (auth, isolation vaults/notes, knowledge) sur une base séparée. Web : Vitest + Testing Library (liens/tags Markdown, `AuthForm`, `PasswordForm`, `RequireAuth`). **Pas de CI** |
 | PostgreSQL | ✅ | `docker-compose.yml` : service `postgres:17` (user/pass/db `lily`), port 5432 |
 | Déploiement | ⬜ | Rien (Phase 10) |
 
@@ -623,9 +623,9 @@ Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 
 
 ## M. État d'avancement & règles pour l'IA
 
-**Prochaine étape : Phase 9** (page Settings, tests front) — puis ajouter la CI restée en suspens depuis la Phase 1.
+**Prochaine étape : CI GitHub Actions** (reste de la Phase 1 : lint + test + build), puis **Phase 10** (Docker & déploiement).
 
-Mis à jour le 2026-09-26. Vérifié : `npm run lint`, `npm run build`, `npm test` (9 tests unitaires) et `npm run test:e2e` (13 tests) passent ; parcours API register → note → recherche → graphe testé à travers le proxy Vite. **L'interface n'a pas encore été testée dans un navigateur.**
+Mis à jour le 2026-09-26. Vérifié : `npm run lint`, `npm run build`, `npm test` (API : 9 tests unitaires ; web : 15 tests) et `npm run test:e2e` (13 tests) passent ; parcours API register → note → recherche → graphe testé à travers le proxy Vite. **L'interface n'a pas encore été testée dans un navigateur.**
 
 | Phase | Statut | Remarques |
 |---|---|---|
@@ -638,7 +638,7 @@ Mis à jour le 2026-09-26. Vérifié : `npm run lint`, `npm run build`, `npm tes
 | 6 — Wikilinks & backlinks | ✅ | Parser testé, index `NoteLink`, renommage qui réécrit les références |
 | 7 — Knowledge graph | ✅ | `react-force-graph-2d` (N-13 → option a). Fluidité à ~500 notes non mesurée |
 | 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri |
-| 9 — Compte & robustesse | 🟡 | Faits côté API : `PATCH /auth/password`, rate limiting. À faire : page Settings (le lien du menu utilisateur n'aboutit pas encore), tests front, `packages/shared` |
+| 9 — Compte & robustesse | ✅ | `PATCH /auth/password`, rate limiting, page Settings, tests front. `packages/shared` pas créé : seuls les types DTO et le parser Markdown (`apps/web/src/lib/markdown.ts`, miroir de l'API) sont dupliqués |
 | 10+ | ⬜ | |
 
 Règles quand on demande « implémente la prochaine fonctionnalité de Lily » :
