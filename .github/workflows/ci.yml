@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# A newer push on the same branch makes the running check pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Same image and credentials as docker-compose.yml. The e2e suite creates
+    # and migrates its own `lily_test` database from DATABASE_URL.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: lily
+          POSTGRES_PASSWORD: lily
+          POSTGRES_DB: lily
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lily"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://lily:lily@localhost:5432/lily
+      JWT_SECRET: ci-secret
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests (API)
+        run: npm run test -w apps/api
+
+      - name: Unit tests (web)
+        run: npm run test -w apps/web
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E tests (API + PostgreSQL)
+        run: npm run test:e2e
