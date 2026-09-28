@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router';
-import { EmptyState } from '@/components/States';
+import { EmptyState, LoadingState } from '@/components/States';
 import { GraphView } from '@/features/graph/GraphView';
 import { useLocalGraph } from '@/features/graph/useGraph';
 import { useBacklinks } from './useNotes';
@@ -16,7 +16,9 @@ export function NoteContext({ vaultId, noteId }: { vaultId: string; noteId: stri
         <h2 className="mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
           Mentionnée dans
         </h2>
-        {backlinks.data?.length ? (
+        {backlinks.isPending ? (
+          <LoadingState />
+        ) : backlinks.data?.length ? (
           <ul className="grid gap-1">
             {backlinks.data.map((note) => (
               <li key={note.id}>
@@ -35,7 +37,11 @@ export function NoteContext({ vaultId, noteId }: { vaultId: string; noteId: stri
       <div>
         <h2 className="mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">Graphe local</h2>
         <div className="rounded-lg border bg-card">
-          {graph.data && graph.data.nodes.length > 1 ? (
+          {graph.isPending ? (
+            <div className="flex h-[220px]">
+              <LoadingState />
+            </div>
+          ) : graph.data && graph.data.nodes.length > 1 ? (
             <GraphView
               graph={graph.data}
               focusId={noteId}

@@ -12,10 +12,16 @@ export const queryClient = new QueryClient({
   },
 });
 
-/** Everything derived from note contents: to refresh after any note change. */
-export function invalidateKnowledge(): Promise<void> {
+/**
+ * Everything derived from note contents: to refresh after any note change.
+ * The queries of a deleted note are skipped: refetching them could only 404.
+ */
+export function invalidateKnowledge(deletedNoteId?: string): Promise<void> {
   const keys = new Set(['vaults', 'vault', 'notes', 'backlinks', 'links', 'graph', 'localGraph', 'tags']);
   return queryClient.invalidateQueries({
-    predicate: (q) => typeof q.queryKey[0] === 'string' && keys.has(q.queryKey[0]),
+    predicate: (q) =>
+      typeof q.queryKey[0] === 'string' &&
+      keys.has(q.queryKey[0]) &&
+      (deletedNoteId === undefined || q.queryKey[1] !== deletedNoteId),
   });
 }

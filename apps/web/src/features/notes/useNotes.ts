@@ -73,7 +73,7 @@ export function useDeleteNote() {
     mutationFn: (id: string) => api<void>(`/notes/${id}`, { method: 'DELETE' }),
     onSuccess: (_, id) => {
       queryClient.removeQueries({ queryKey: ['note', id] });
-      return invalidateKnowledge();
+      return invalidateKnowledge(id);
     },
   });
 }
