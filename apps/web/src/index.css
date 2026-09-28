@@ -175,3 +175,83 @@ body {
     @apply font-sans;
   }
 }
+
+/* Rendered note Markdown (MarkdownView): Tailwind's preflight resets every
+   element, so headings, lists, code… need their typography back. */
+@layer components {
+  .markdown {
+    @apply leading-relaxed break-words;
+  }
+  .markdown > * + * {
+    @apply mt-4;
+  }
+  .markdown h1 {
+    @apply mt-8 text-3xl font-semibold;
+  }
+  .markdown h2 {
+    @apply mt-8 border-b pb-1 text-2xl font-semibold;
+  }
+  .markdown h3 {
+    @apply mt-6 text-xl font-semibold;
+  }
+  .markdown :is(h4, h5, h6) {
+    @apply mt-6 font-semibold;
+  }
+  .markdown > :first-child {
+    @apply mt-0;
+  }
+  .markdown ul {
+    @apply list-disc pl-6;
+  }
+  .markdown ol {
+    @apply list-decimal pl-6;
+  }
+  .markdown li + li,
+  .markdown li > :is(ul, ol) {
+    @apply mt-1;
+  }
+  .markdown li:has(> input[type='checkbox']) {
+    @apply list-none;
+  }
+  .markdown li > input[type='checkbox'] {
+    @apply mr-2 -ml-5 align-middle accent-primary;
+  }
+  .markdown a {
+    @apply text-primary underline underline-offset-4;
+  }
+  .markdown blockquote {
+    @apply border-l-4 border-secondary pl-4 text-muted-foreground italic;
+  }
+  .markdown hr {
+    @apply border-t;
+  }
+  .markdown :not(pre) > code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em];
+  }
+  .markdown pre {
+    @apply overflow-x-auto rounded-lg border bg-card p-4 font-mono text-sm leading-normal;
+  }
+  .markdown table {
+    @apply block w-max max-w-full overflow-x-auto border-collapse text-sm;
+  }
+  .markdown :is(th, td) {
+    @apply border px-3 py-1.5 text-left;
+  }
+  .markdown th {
+    @apply bg-muted font-semibold;
+  }
+  .markdown img {
+    @apply max-w-full rounded-lg;
+  }
+
+  /* [[Wikilinks]]: resolved ones read as links, missing ones look faded. */
+  .markdown .wikilink {
+    @apply cursor-pointer font-medium text-primary no-underline hover:underline;
+  }
+  .markdown .wikilink-missing {
+    @apply text-muted-foreground underline decoration-dashed opacity-80;
+  }
+  .markdown .tag-link {
+    @apply cursor-pointer rounded-full bg-accent px-1.5 text-[0.9em] text-accent-foreground hover:bg-secondary;
+  }
+}
