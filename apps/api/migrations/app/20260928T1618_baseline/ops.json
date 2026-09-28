@@ -1,0 +1,1348 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.folders",
+    "label": "Create table \"folders\"",
+    "summary": "Creates table \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"folders\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"folders\"",
+        "sql": "CREATE TABLE \"public\".\"folders\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"parentId\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"vaultId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"folders\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.note_links",
+    "label": "Create table \"note_links\"",
+    "summary": "Creates table \"note_links\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"note_links\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"note_links\"",
+        "sql": "CREATE TABLE \"public\".\"note_links\" (\n  \"id\" text NOT NULL,\n  \"sourceNoteId\" text NOT NULL,\n  \"targetNoteId\" text,\n  \"targetTitle\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"note_links\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.note_tags",
+    "label": "Create table \"note_tags\"",
+    "summary": "Creates table \"note_tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "note_tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"note_tags\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"note_tags\"",
+        "sql": "CREATE TABLE \"public\".\"note_tags\" (\n  \"noteId\" text NOT NULL,\n  \"tagId\" text NOT NULL,\n  PRIMARY KEY (\"noteId\", \"tagId\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"note_tags\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.notes",
+    "label": "Create table \"notes\"",
+    "summary": "Creates table \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"notes\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"notes\"",
+        "sql": "CREATE TABLE \"public\".\"notes\" (\n  \"content\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"folderId\" text,\n  \"id\" text NOT NULL,\n  \"title\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"vaultId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"notes\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.tags",
+    "label": "Create table \"tags\"",
+    "summary": "Creates table \"tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"tags\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"tags\"",
+        "sql": "CREATE TABLE \"public\".\"tags\" (\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"vaultId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"tags\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.users",
+    "label": "Create table \"users\"",
+    "summary": "Creates table \"users\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"users\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"users\"",
+        "sql": "CREATE TABLE \"public\".\"users\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"email\" text NOT NULL,\n  \"id\" text NOT NULL,\n  \"passwordHash\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"users\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.vaults",
+    "label": "Create table \"vaults\"",
+    "summary": "Creates table \"vaults\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "vaults"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"vaults\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"vaults\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"vaults\"",
+        "sql": "CREATE TABLE \"public\".\"vaults\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"ownerId\" text NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"vaults\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"vaults\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.note_links.note_links_sourceNoteId_targetTitle_key",
+    "label": "Add unique constraint on \"note_links\" (sourceNoteId, targetTitle)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "note_links_sourceNoteId_targetTitle_key",
+        "table": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"note_links_sourceNoteId_targetTitle_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_sourceNoteId_targetTitle_key",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"note_links_sourceNoteId_targetTitle_key\"",
+        "sql": "ALTER TABLE \"public\".\"note_links\" ADD CONSTRAINT \"note_links_sourceNoteId_targetTitle_key\" UNIQUE (\"sourceNoteId\", \"targetTitle\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"note_links_sourceNoteId_targetTitle_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_sourceNoteId_targetTitle_key",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.tags.tags_vaultId_name_key",
+    "label": "Add unique constraint on \"tags\" (vaultId, name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "tags_vaultId_name_key",
+        "table": "tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"tags_vaultId_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tags_vaultId_name_key",
+          "public",
+          "\"public\".\"tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"tags_vaultId_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"tags\" ADD CONSTRAINT \"tags_vaultId_name_key\" UNIQUE (\"vaultId\", \"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"tags_vaultId_name_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tags_vaultId_name_key",
+          "public",
+          "\"public\".\"tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.users.users_email_key",
+    "label": "Add unique constraint on \"users\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "users_email_key",
+        "table": "users"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"users_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"users_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"users\" ADD CONSTRAINT \"users_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"users_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "users_email_key",
+          "public",
+          "\"public\".\"users\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.vaults.vaults_ownerId_name_key",
+    "label": "Add unique constraint on \"vaults\" (ownerId, name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "vaults_ownerId_name_key",
+        "table": "vaults"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"vaults_ownerId_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "vaults_ownerId_name_key",
+          "public",
+          "\"public\".\"vaults\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"vaults_ownerId_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"vaults\" ADD CONSTRAINT \"vaults_ownerId_name_key\" UNIQUE (\"ownerId\", \"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"vaults_ownerId_name_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "vaults_ownerId_name_key",
+          "public",
+          "\"public\".\"vaults\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.folders.folders_parentId_idx_6a68f597",
+    "label": "Create index \"folders_parentId_idx_6a68f597\" on \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "folders_parentId_idx_6a68f597",
+        "table": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"folders_parentId_idx_6a68f597\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_parentId_idx_6a68f597\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"folders_parentId_idx_6a68f597\"",
+        "sql": "CREATE INDEX \"folders_parentId_idx_6a68f597\" ON \"public\".\"folders\" (\"parentId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"folders_parentId_idx_6a68f597\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_parentId_idx_6a68f597\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.folders.folders_vaultId_idx_5c1e623c",
+    "label": "Create index \"folders_vaultId_idx_5c1e623c\" on \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "folders_vaultId_idx_5c1e623c",
+        "table": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"folders_vaultId_idx_5c1e623c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"folders_vaultId_idx_5c1e623c\"",
+        "sql": "CREATE INDEX \"folders_vaultId_idx_5c1e623c\" ON \"public\".\"folders\" (\"vaultId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"folders_vaultId_idx_5c1e623c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.folders.folders_vault_parent_name_1441000c",
+    "label": "Create index \"folders_vault_parent_name_1441000c\" on \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "folders_vault_parent_name_1441000c",
+        "table": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"folders_vault_parent_name_1441000c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_vault_parent_name_1441000c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"folders_vault_parent_name_1441000c\"",
+        "sql": "CREATE UNIQUE INDEX \"folders_vault_parent_name_1441000c\" ON \"public\".\"folders\" (\"vaultId\", coalesce(\"parentId\", ''), name)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"folders_vault_parent_name_1441000c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"folders_vault_parent_name_1441000c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.note_links.note_links_sourceNoteId_idx_b1bc7620",
+    "label": "Create index \"note_links_sourceNoteId_idx_b1bc7620\" on \"note_links\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "note_links_sourceNoteId_idx_b1bc7620",
+        "table": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"note_links_sourceNoteId_idx_b1bc7620\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links_sourceNoteId_idx_b1bc7620\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"note_links_sourceNoteId_idx_b1bc7620\"",
+        "sql": "CREATE INDEX \"note_links_sourceNoteId_idx_b1bc7620\" ON \"public\".\"note_links\" (\"sourceNoteId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"note_links_sourceNoteId_idx_b1bc7620\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links_sourceNoteId_idx_b1bc7620\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.note_links.note_links_targetNoteId_idx_37a5ad18",
+    "label": "Create index \"note_links_targetNoteId_idx_37a5ad18\" on \"note_links\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "note_links_targetNoteId_idx_37a5ad18",
+        "table": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"note_links_targetNoteId_idx_37a5ad18\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links_targetNoteId_idx_37a5ad18\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"note_links_targetNoteId_idx_37a5ad18\"",
+        "sql": "CREATE INDEX \"note_links_targetNoteId_idx_37a5ad18\" ON \"public\".\"note_links\" (\"targetNoteId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"note_links_targetNoteId_idx_37a5ad18\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_links_targetNoteId_idx_37a5ad18\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.note_tags.note_tags_noteId_idx_0612c5b1",
+    "label": "Create index \"note_tags_noteId_idx_0612c5b1\" on \"note_tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "note_tags_noteId_idx_0612c5b1",
+        "table": "note_tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"note_tags_noteId_idx_0612c5b1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags_noteId_idx_0612c5b1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"note_tags_noteId_idx_0612c5b1\"",
+        "sql": "CREATE INDEX \"note_tags_noteId_idx_0612c5b1\" ON \"public\".\"note_tags\" (\"noteId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"note_tags_noteId_idx_0612c5b1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags_noteId_idx_0612c5b1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.note_tags.note_tags_tagId_idx_86854244",
+    "label": "Create index \"note_tags_tagId_idx_86854244\" on \"note_tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "note_tags_tagId_idx_86854244",
+        "table": "note_tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"note_tags_tagId_idx_86854244\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags_tagId_idx_86854244\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"note_tags_tagId_idx_86854244\"",
+        "sql": "CREATE INDEX \"note_tags_tagId_idx_86854244\" ON \"public\".\"note_tags\" (\"tagId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"note_tags_tagId_idx_86854244\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"note_tags_tagId_idx_86854244\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.notes.notes_folderId_idx_5985e562",
+    "label": "Create index \"notes_folderId_idx_5985e562\" on \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "notes_folderId_idx_5985e562",
+        "table": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"notes_folderId_idx_5985e562\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_folderId_idx_5985e562\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"notes_folderId_idx_5985e562\"",
+        "sql": "CREATE INDEX \"notes_folderId_idx_5985e562\" ON \"public\".\"notes\" (\"folderId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"notes_folderId_idx_5985e562\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_folderId_idx_5985e562\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.notes.notes_vaultId_idx_5c1e623c",
+    "label": "Create index \"notes_vaultId_idx_5c1e623c\" on \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "notes_vaultId_idx_5c1e623c",
+        "table": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"notes_vaultId_idx_5c1e623c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"notes_vaultId_idx_5c1e623c\"",
+        "sql": "CREATE INDEX \"notes_vaultId_idx_5c1e623c\" ON \"public\".\"notes\" (\"vaultId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"notes_vaultId_idx_5c1e623c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.notes.notes_vault_title_ci_2c3f0462",
+    "label": "Create index \"notes_vault_title_ci_2c3f0462\" on \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "notes_vault_title_ci_2c3f0462",
+        "table": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"notes_vault_title_ci_2c3f0462\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_vault_title_ci_2c3f0462\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"notes_vault_title_ci_2c3f0462\"",
+        "sql": "CREATE UNIQUE INDEX \"notes_vault_title_ci_2c3f0462\" ON \"public\".\"notes\" (\"vaultId\", lower(title))",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"notes_vault_title_ci_2c3f0462\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"notes_vault_title_ci_2c3f0462\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.tags.tags_vaultId_idx_5c1e623c",
+    "label": "Create index \"tags_vaultId_idx_5c1e623c\" on \"tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "tags_vaultId_idx_5c1e623c",
+        "table": "tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"tags_vaultId_idx_5c1e623c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tags_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"tags_vaultId_idx_5c1e623c\"",
+        "sql": "CREATE INDEX \"tags_vaultId_idx_5c1e623c\" ON \"public\".\"tags\" (\"vaultId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"tags_vaultId_idx_5c1e623c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"tags_vaultId_idx_5c1e623c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.vaults.vaults_ownerId_idx_e2d0c1ef",
+    "label": "Create index \"vaults_ownerId_idx_e2d0c1ef\" on \"vaults\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "vaults_ownerId_idx_e2d0c1ef",
+        "table": "vaults"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"vaults_ownerId_idx_e2d0c1ef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"vaults_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"vaults_ownerId_idx_e2d0c1ef\"",
+        "sql": "CREATE INDEX \"vaults_ownerId_idx_e2d0c1ef\" ON \"public\".\"vaults\" (\"ownerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"vaults_ownerId_idx_e2d0c1ef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"vaults_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.folders.folders_vaultId_fkey",
+    "label": "Add foreign key \"folders_vaultId_fkey\" on \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "folders_vaultId_fkey",
+        "table": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"folders_vaultId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "folders_vaultId_fkey",
+          "public",
+          "\"public\".\"folders\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"folders_vaultId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"folders\"\nADD CONSTRAINT \"folders_vaultId_fkey\"\nFOREIGN KEY (\"vaultId\")\nREFERENCES \"public\".\"vaults\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"folders_vaultId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "folders_vaultId_fkey",
+          "public",
+          "\"public\".\"folders\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.folders.folders_parentId_fkey",
+    "label": "Add foreign key \"folders_parentId_fkey\" on \"folders\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "folders_parentId_fkey",
+        "table": "folders"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"folders_parentId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "folders_parentId_fkey",
+          "public",
+          "\"public\".\"folders\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"folders_parentId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"folders\"\nADD CONSTRAINT \"folders_parentId_fkey\"\nFOREIGN KEY (\"parentId\")\nREFERENCES \"public\".\"folders\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"folders_parentId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "folders_parentId_fkey",
+          "public",
+          "\"public\".\"folders\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.note_links.note_links_sourceNoteId_fkey",
+    "label": "Add foreign key \"note_links_sourceNoteId_fkey\" on \"note_links\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "note_links_sourceNoteId_fkey",
+        "table": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"note_links_sourceNoteId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_sourceNoteId_fkey",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"note_links_sourceNoteId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"note_links\"\nADD CONSTRAINT \"note_links_sourceNoteId_fkey\"\nFOREIGN KEY (\"sourceNoteId\")\nREFERENCES \"public\".\"notes\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"note_links_sourceNoteId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_sourceNoteId_fkey",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.note_links.note_links_targetNoteId_fkey",
+    "label": "Add foreign key \"note_links_targetNoteId_fkey\" on \"note_links\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "note_links_targetNoteId_fkey",
+        "table": "note_links"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"note_links_targetNoteId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_targetNoteId_fkey",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"note_links_targetNoteId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"note_links\"\nADD CONSTRAINT \"note_links_targetNoteId_fkey\"\nFOREIGN KEY (\"targetNoteId\")\nREFERENCES \"public\".\"notes\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"note_links_targetNoteId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_links_targetNoteId_fkey",
+          "public",
+          "\"public\".\"note_links\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.note_tags.note_tags_noteId_fkey",
+    "label": "Add foreign key \"note_tags_noteId_fkey\" on \"note_tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "note_tags_noteId_fkey",
+        "table": "note_tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"note_tags_noteId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_tags_noteId_fkey",
+          "public",
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"note_tags_noteId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"note_tags\"\nADD CONSTRAINT \"note_tags_noteId_fkey\"\nFOREIGN KEY (\"noteId\")\nREFERENCES \"public\".\"notes\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"note_tags_noteId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_tags_noteId_fkey",
+          "public",
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.note_tags.note_tags_tagId_fkey",
+    "label": "Add foreign key \"note_tags_tagId_fkey\" on \"note_tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "note_tags_tagId_fkey",
+        "table": "note_tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"note_tags_tagId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_tags_tagId_fkey",
+          "public",
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"note_tags_tagId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"note_tags\"\nADD CONSTRAINT \"note_tags_tagId_fkey\"\nFOREIGN KEY (\"tagId\")\nREFERENCES \"public\".\"tags\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"note_tags_tagId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "note_tags_tagId_fkey",
+          "public",
+          "\"public\".\"note_tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.notes.notes_vaultId_fkey",
+    "label": "Add foreign key \"notes_vaultId_fkey\" on \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "notes_vaultId_fkey",
+        "table": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"notes_vaultId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notes_vaultId_fkey",
+          "public",
+          "\"public\".\"notes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"notes_vaultId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"notes\"\nADD CONSTRAINT \"notes_vaultId_fkey\"\nFOREIGN KEY (\"vaultId\")\nREFERENCES \"public\".\"vaults\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"notes_vaultId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notes_vaultId_fkey",
+          "public",
+          "\"public\".\"notes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.notes.notes_folderId_fkey",
+    "label": "Add foreign key \"notes_folderId_fkey\" on \"notes\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "notes_folderId_fkey",
+        "table": "notes"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"notes_folderId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notes_folderId_fkey",
+          "public",
+          "\"public\".\"notes\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"notes_folderId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"notes\"\nADD CONSTRAINT \"notes_folderId_fkey\"\nFOREIGN KEY (\"folderId\")\nREFERENCES \"public\".\"folders\" (\"id\")\nON DELETE RESTRICT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"notes_folderId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "notes_folderId_fkey",
+          "public",
+          "\"public\".\"notes\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.tags.tags_vaultId_fkey",
+    "label": "Add foreign key \"tags_vaultId_fkey\" on \"tags\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "tags_vaultId_fkey",
+        "table": "tags"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"tags_vaultId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tags_vaultId_fkey",
+          "public",
+          "\"public\".\"tags\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"tags_vaultId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"tags\"\nADD CONSTRAINT \"tags_vaultId_fkey\"\nFOREIGN KEY (\"vaultId\")\nREFERENCES \"public\".\"vaults\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"tags_vaultId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "tags_vaultId_fkey",
+          "public",
+          "\"public\".\"tags\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.vaults.vaults_ownerId_fkey",
+    "label": "Add foreign key \"vaults_ownerId_fkey\" on \"vaults\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "vaults_ownerId_fkey",
+        "table": "vaults"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"vaults_ownerId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "vaults_ownerId_fkey",
+          "public",
+          "\"public\".\"vaults\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"vaults_ownerId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"vaults\"\nADD CONSTRAINT \"vaults_ownerId_fkey\"\nFOREIGN KEY (\"ownerId\")\nREFERENCES \"public\".\"users\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"vaults_ownerId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "vaults_ownerId_fkey",
+          "public",
+          "\"public\".\"vaults\""
+        ]
+      }
+    ]
+  }
+]

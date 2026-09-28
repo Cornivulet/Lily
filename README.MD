@@ -42,7 +42,7 @@ Prérequis : Node.js 24, npm, Docker.
 npm install
 cp apps/api/.env.example apps/api/.env   # puis changer JWT_SECRET
 npm run db:up                            # PostgreSQL dans Docker
-npm run db:update                        # crée / met à jour les tables
+npm run db:migrate                       # applique les migrations (crée les tables)
 npm run dev                              # API :3000 + web :5173
 ```
 

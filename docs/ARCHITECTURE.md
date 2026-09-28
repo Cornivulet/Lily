@@ -70,7 +70,7 @@ Lily/
 - **Erreurs** : format NestJS `{ statusCode, message, error }`. Violation d'unicité → 409 (traduite dans les services, `common/db-errors.ts`).
 - **Autorisation** : chaque accès vérifie que la ressource appartient à l'utilisateur, via `findOwnedVaultOrThrow` et `findOwnedNoteOrThrow`. Une ressource d'un autre utilisateur donne **404**, jamais 403, pour ne pas révéler qu'elle existe.
 - **Transactions** : création, modification et suppression de note mettent à jour l'index des liens et des tags dans la même transaction. Un renommage réécrit aussi les notes qui citent l'ancien titre.
-- **Rate limiting** : `@nestjs/throttler`, 600 req/min globalement et 10 req/min sur register, login et changement de mot de passe.
+- **Rate limiting** : `@nestjs/throttler`, 600 req/min globalement et 10 req/min sur register, login et changement de mot de passe. Les limites sont comptées par IP client : l'API fait confiance à **un** proxy (`trust proxy` = 1 : Vite en dev, Caddy en production) pour lire `X-Forwarded-For`. Elle ne doit donc jamais être exposée directement sur Internet.
 
 L'API REST complète (routes, corps, codes) est décrite dans [SPEC.md §H](SPEC.md#h-api-rest). Seul écart : `POST /auth/register` renvoie aussi `defaultVaultId`, pour que le front ouvre directement le vault créé.
 
@@ -87,7 +87,7 @@ L'API REST complète (routes, corps, codes) est décrite dans [SPEC.md §H](SPEC
 
 Le schéma est **déclaré** dans `apps/api/src/prisma/contract.prisma`. `prisma contract emit` en génère `contract.json` et `contract.d.ts`, tous deux versionnés. Le client typé (`prisma/db.ts`) est injecté dans les services via le token `DB` du `PrismaModule`.
 
-`npm run db:update` régénère le contrat et **aligne la base** sur celui-ci (`prisma db update`). C'est pratique en développement ; une vraie stratégie de migrations pour la production reste à mettre en place (Phase 10). Prisma Next est en version RC : voir SPEC §N-14.
+Le schéma évolue par **migrations versionnées** dans `apps/api/migrations/app/` : `prisma migration plan` les génère à partir du contrat, `prisma db migrate` les applique (`npm run db:migrate`). La première, `…_baseline`, crée tout le schéma. Les e2e et la production passent par ces migrations. `npm run db:update` (`prisma db update`, alignement direct sans migration) sert seulement à prototyper en dev. Prisma Next est en version RC : voir SPEC §N-14.
 
 ### Modèle
 

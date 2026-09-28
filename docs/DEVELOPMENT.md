@@ -30,7 +30,7 @@ Le front n'a pas de variable d'environnement : il appelle `/api`, relayé par Vi
 
 ```bash
 npm run db:up        # PostgreSQL 17 dans Docker (conteneur lily-postgres)
-npm run db:update    # aligne le schéma de la base sur le contrat Prisma
+npm run db:migrate   # applique les migrations de apps/api/migrations/
 npm run dev          # API (watch, :3000) + web (Vite, :5173)
 ```
 
@@ -46,11 +46,16 @@ Pour lancer les deux applications séparément : `npm run start:dev -w apps/api`
 
 ### Modifier le schéma (Prisma Next)
 
-1. Éditer `apps/api/src/prisma/contract.prisma`.
-2. `npm run db:update` : régénère `contract.json` / `contract.d.ts` (`prisma contract emit`) puis met à jour la base de développement.
-3. Commiter le `.prisma` **et** les fichiers générés, ainsi que les changements de `apps/api/migrations/`.
+Le schéma évolue par **migrations versionnées**, les mêmes en dev, en test, en CI et en production.
 
-La base e2e est mise à jour automatiquement au lancement de `npm run test:e2e`. Documentation de l'outil : `apps/api/prisma-next.md`.
+1. Éditer `apps/api/src/prisma/contract.prisma`.
+2. `npm run migration:plan -w apps/api` : régénère `contract.json` / `contract.d.ts`, puis crée un dossier `apps/api/migrations/app/<date>_<nom>/` qui décrit les opérations à appliquer. **Le relire** (`migration.ts`, `ops.json`), surtout si une opération peut perdre des données.
+3. `npm run db:migrate` : applique la migration à la base de dev.
+4. Commiter le `.prisma`, les fichiers générés et tout `apps/api/migrations/`.
+
+`npm run test:e2e` applique les migrations à la base `lily_test` : un changement de contrat sans migration fait donc échouer les e2e, en local comme en CI.
+
+Pour prototyper, `npm run db:update` aligne directement la base de dev sur le contrat, sans migration. Il faut quand même planifier la migration avant de commiter. Documentation de l'outil : `apps/api/prisma-next.md`.
 
 ## Qualité
 
@@ -115,4 +120,4 @@ Un nouveau push sur la même branche annule l'exécution en cours. Résultats : 
 | `ECONNREFUSED 127.0.0.1:5432` | PostgreSQL non démarré : `npm run db:up` |
 | Page blanche ou 502 sur `/api/...` | L'API ne tourne pas, ou n'écoute pas sur le port 3000 |
 | `429 Too Many Requests` sur la connexion | Limite de 10 tentatives par minute : attendre une minute |
-| Erreurs SQL « relation does not exist » | Schéma pas à jour : `npm run db:update` |
+| Erreurs SQL « relation does not exist » | Schéma pas à jour : `npm run db:migrate` |

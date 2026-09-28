@@ -3,8 +3,9 @@ import 'dotenv/config';
 import pg from 'pg';
 
 /**
- * Creates the e2e database if needed and brings its schema up to date with the
- * contract. The e2e suite never touches the development database.
+ * Creates the e2e database if needed and applies the on-disk migrations, so the
+ * suite also proves they build the schema the code expects. The e2e suite
+ * never touches the development database.
  */
 export default async function setup(): Promise<void> {
   const url = new URL(process.env['DATABASE_URL']!);
@@ -23,7 +24,7 @@ export default async function setup(): Promise<void> {
 
   execFileSync(
     'npx',
-    ['prisma', 'db', 'update', '--db', testUrl.toString(), '--confirm', testDb],
+    ['prisma', 'db', 'migrate', '--db', testUrl.toString()],
     { stdio: 'ignore' },
   );
 
