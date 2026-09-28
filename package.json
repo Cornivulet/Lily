@@ -1,7 +1,7 @@
 {
   "name": "lily",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lily — personal knowledge base (notes, wikilinks, graph)",
   "homepage": "https://github.com/Cornivulet/Lily#readme",
   "bugs": {
     "url": "https://github.com/Cornivulet/Lily/issues"
@@ -13,12 +13,21 @@
   "license": "ISC",
   "author": "",
   "type": "commonjs",
-  "main": "index.js",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  }
+    "dev": "concurrently -k -n api,web -c magenta,cyan \"npm run start:dev -w apps/api\" \"npm run dev -w apps/web\"",
+    "db:up": "docker compose up -d postgres",
+    "db:update": "npm run db:update -w apps/api",
+    "build": "npm run build -w apps/api && npm run build -w apps/web",
+    "lint": "npm run lint -w apps/api && npm run lint -w apps/web",
+    "test": "npm run test -w apps/api && npm run test -w apps/web",
+    "test:e2e": "npm run test:e2e -w apps/api"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  },
+  "private": true
 }
