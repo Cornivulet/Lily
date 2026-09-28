@@ -2,10 +2,12 @@
 
 > Document de référence. Toute IA ou contributeur qui implémente une fonctionnalité de Lily doit lire ce document d'abord, puis la section **§M État d'avancement** pour savoir quelle est la prochaine étape.
 >
+> Ce document dit ce qui est **voulu** et pourquoi. Ce qui **existe** est décrit dans [FEATURES.md](FEATURES.md) (comportement), [ARCHITECTURE.md](ARCHITECTURE.md) (code, données) et [DEVELOPMENT.md](DEVELOPMENT.md) (installation, Git, CI).
+>
 > Niveaux de maturité utilisés partout : **MVP** · **V1** · **V2** · **Idée future** · **Hors scope**.
 > Statut d'implémentation : ✅ fait · 🟡 partiel/prototype · ⬜ à faire.
 
-## 0. État actuel du code (au 2026-09-26)
+## 0. État actuel du code (au 2026-09-28)
 
 Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). Le détail par phase est dans §M.
 
@@ -18,9 +20,11 @@ Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). L
 | Knowledge | ✅ | `[[wikilinks]]` et `#tags` indexés à chaque save ; renommage qui réécrit les références ; backlinks, liens sortants, graphe du vault et graphe local |
 | `apps/web` | ✅ | React 19, Vite 8, TS 6, Tailwind v4, shadcn/ui, React Router (data router), TanStack Query, react-markdown + remark-gfm, `react-force-graph-2d`, sonner. UI en français |
 | Écrans | ✅ | Login, Register, Vaults, Vault (sidebar : sélecteur de vault, recherche, filtres, arbre de dossiers/notes), Note (lecture/édition, aperçu, backlinks, graphe local), Graphe, Settings (profil, mot de passe, déconnexion) |
-| Tests | 🟡 | API : tests unitaires du parser Markdown, e2e (auth, isolation vaults/notes, knowledge) sur une base séparée. Web : Vitest + Testing Library (liens/tags Markdown, `AuthForm`, `PasswordForm`, `RequireAuth`). **Pas de CI** |
+| Tests | ✅ | API : tests unitaires du parser Markdown, e2e (auth, isolation vaults/notes, knowledge) sur une base séparée. Web : Vitest + Testing Library (liens/tags Markdown, `AuthForm`, `PasswordForm`, `RequireAuth`). Parcours complet vérifié dans un navigateur (Chromium) le 2026-09-28 |
+| CI | ✅ | GitHub Actions (`.github/workflows/ci.yml`) : lint, tests unitaires API et web, build, e2e sur un service PostgreSQL 17, à chaque push et PR |
+| Documentation | ✅ | `README.MD`, `docs/FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/DEVELOPMENT.md` |
 | PostgreSQL | ✅ | `docker-compose.yml` : service `postgres:17` (user/pass/db `lily`), port 5432 |
-| Déploiement | ⬜ | Rien (Phase 10) |
+| Déploiement | ⬜ | Rien de déployé ; Phase 10 préparée en §L (bloquée par §N-18) |
 
 ---
 
@@ -345,7 +349,7 @@ User
 ### Auth — MVP
 | Méthode | Route | Objectif | Body | Réponse | Codes |
 |---|---|---|---|---|---|
-| POST | `/api/auth/register` | Créer un compte (+ vault par défaut) et connecter | `{ email, password }` (password ≥ 8, ≤ 128) | `UserDto` + cookie | 201, 400, 409 |
+| POST | `/api/auth/register` | Créer un compte (+ vault par défaut) et connecter | `{ email, password }` (password ≥ 8, ≤ 128) | `UserDto` + `defaultVaultId` (pour ouvrir le vault créé) + cookie | 201, 400, 409 |
 | POST | `/api/auth/login` | Se connecter | `{ email, password }` | `UserDto` + cookie | 200, 400, 401 |
 | POST | `/api/auth/logout` | Se déconnecter (efface le cookie) | — | — | 204 |
 | GET | `/api/auth/me` | Utilisateur courant (le front l'appelle au démarrage) | — | `UserDto` | 200, 401 |
@@ -585,8 +589,20 @@ Chaque phase = une série de petits commits vérifiables. « Terminé quand » =
 - Changement de mot de passe, rate limiting auth, page Settings, tests front sur composants clés, `packages/shared` si utile.
 
 ### Phase 10 — Docker & déploiement · V1
-- Dockerfiles API + web (build statique servi par nginx ou par l'API), `docker-compose.prod.yml`, migrations au démarrage, déploiement sur un VPS ou PaaS.
-- **Terminé quand** : Lily accessible en HTTPS sur une URL publique.
+Préalables relevés lors de la préparation (2026-09-28) :
+- **Migrations** : `npm run db:update` (`prisma db update`) aligne directement la base sur le contrat. C'est un outil de dev. En production, il faut des migrations versionnées sur disque (`prisma migration plan`), relues puis appliquées au démarrage ou par un job dédié. À valider sur la RC Prisma Next (§N-14).
+- **Reverse proxy et IP client** : derrière un proxy, l'API voit l'IP du proxy, et le rate limiting de `/auth/*` (10 req/min) deviendrait global à tous les utilisateurs. Il faut activer `trust proxy` dans Express (`app.set('trust proxy', 1)`).
+- **Cookie `Secure`** : avec `NODE_ENV=production`, la session exige HTTPS. Pas de test en HTTP simple.
+- **Même origine** : le front et `/api` doivent être servis sous le même domaine, sinon le cookie `SameSite=Lax` ne suit plus et il faudrait du CORS.
+
+Étapes (un commit chacune) :
+1. `trust proxy` + `NODE_ENV=production` documenté + migrations sur disque (script `db:migrate`).
+2. `apps/api/Dockerfile` multi-étapes (`node:24-slim`, `npm ci` du workspace, `nest build`, image finale avec `node dist/main`, utilisateur non root).
+3. `apps/web/Dockerfile` : `vite build` puis serveur statique + reverse proxy `/api` → `api:3000` (Caddy : HTTPS automatique, config de quelques lignes ; ou nginx, cf. §N-18).
+4. `docker-compose.prod.yml` : `postgres` (volume, sans port exposé), `api` (healthcheck, migrations au démarrage), `web` (ports 80/443). Secrets dans un `.env` non versionné.
+5. CI : construire les images pour vérifier les Dockerfiles (sans publication au début).
+6. Déploiement sur un VPS (cf. §N-18), nom de domaine, sauvegarde quotidienne `pg_dump`, procédure de mise à jour documentée dans `DEVELOPMENT.md`.
+- **Terminé quand** : Lily accessible en HTTPS sur une URL publique ; `docker compose -f docker-compose.prod.yml up -d` sur une machine vierge suffit à la relancer.
 
 ### Phase 11 — Confort · V2
 - Autosave (debounce), corbeille (`deletedAt`), favoris, recherche plein texte PostgreSQL (`tsvector` + index GIN, classement, extraits), éditeur CodeMirror (coloration Markdown, autocomplétion `[[`).
@@ -598,9 +614,17 @@ Chaque phase = une série de petits commits vérifiables. « Terminé quand » =
 - Export `.zip` de `.md` ; import d'un dossier Obsidian (liens `[[...]]` compatibles).
 
 ### Phase 14 — Electron · V2
-- Coquille Electron chargeant le client web, parlant à l'API distante (ou locale). Offline/synchro : Idée future.
+- Nouveau workspace `apps/desktop` : processus principal Electron minimal qui ouvre une `BrowserWindow` sur **l'URL de production** (§N-15 option a). C'est l'option la plus simple : le cookie de session fonctionne tel quel (même origine), et le front n'a pas besoin d'être modifié ni dupliqué.
+- Charger plutôt le build local (`file://`) casserait l'auth par cookie (origine différente) et obligerait à revoir §N-9 (token + header `Authorization`, CORS). À ne faire que pour l'offline.
+- Sécurité Electron : `contextIsolation: true`, `nodeIntegration: false`, liens externes ouverts dans le navigateur, navigation limitée au domaine de Lily.
+- Packaging avec `electron-builder` (Linux AppImage/deb, Windows, macOS) ; mise à jour automatique plus tard.
+- Offline / synchro : Idée future (§N-15 b/c).
+- **Terminé quand** : un installateur Linux ouvre Lily connecté à l'instance de production.
 
-Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 (scoping par vault) ; 7 dépend de 6 ; 8 réutilise le parser de 6 ; 10 peut se faire dès la fin du MVP ; 14 dépend de 10 (API accessible).
+### Mobile · à décider (§N-19)
+Le web est déjà utilisable sur téléphone (sidebar en tiroir, vérifié à 390 px). Voies possibles, de la moins à la plus coûteuse : PWA installable (manifest + icônes, sans offline), coquille Capacitor autour du front, application native (hors scope, §F). Rien n'est planifié avant la décision N-19.
+
+Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 (scoping par vault) ; 7 dépend de 6 ; 8 réutilise le parser de 6 ; 10 peut se faire dès la fin du MVP ; 14 et le mobile dépendent de 10 (instance HTTPS publique).
 
 ---
 
@@ -623,23 +647,29 @@ Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 
 
 ## M. État d'avancement & règles pour l'IA
 
-**Prochaine étape : CI GitHub Actions** (reste de la Phase 1 : lint + test + build), puis **Phase 10** (Docker & déploiement).
+**Prochaine étape : Phase 10** (Docker & déploiement, étapes détaillées en §L), après avoir tranché §N-18. Avant, petit correctif : unicité des noms de dossiers (écart ci-dessous).
 
-Mis à jour le 2026-09-26. Vérifié : `npm run lint`, `npm run build`, `npm test` (API : 9 tests unitaires ; web : 15 tests) et `npm run test:e2e` (13 tests) passent ; parcours API register → note → recherche → graphe testé à travers le proxy Vite. **L'interface n'a pas encore été testée dans un navigateur.**
+Mis à jour le 2026-09-28. Vérifié localement et en CI : `npm run lint`, `npm run build`, `npm test` (API : 9 tests unitaires ; web : 15 tests), `npm run test:e2e` (13 tests). **Recette navigateur** (Chromium piloté par Playwright, hors dépôt) : 46 vérifications couvrant les UC-01 à 04, 10 à 13, 20 à 25, 30 à 34, 40, 41 et 50, plus le responsive à 390 px. Aucune erreur JavaScript en console. Elle a révélé et fait corriger : l'absence totale de style du Markdown rendu (titres, listes, code, tableaux, liens fantômes et tags indistincts, UC-30 2a), des états vides affichés pendant le chargement des backlinks et du graphe local, et des requêtes 404 après la suppression d'une note.
+
+Écarts connus entre la spec et le code :
+- **Unicité des dossiers** : §G prévoit unique(`vaultId`, `parentId`, `name`), mais le code accepte deux dossiers frères de même nom. Bug à corriger (index unique qui gère `parentId` NULL + 409 dans le service).
+- **Unicité des vaults** sensible à la casse (« Travail » ≠ « travail »), alors que les titres de notes ne le sont pas. Conforme à §G, mais incohérent pour l'utilisateur : à trancher si ça gêne.
+- `PATCH /auth/password` renvoie 401 quand le mot de passe actuel est faux (le front ne déconnecte pas pour autant). §H ne précise pas ce code ; 400 serait plus juste sémantiquement.
 
 | Phase | Statut | Remarques |
 |---|---|---|
 | 0 — Remise en ordre | ✅ | Préfixe `/api`, proxy Vite, script `dev`, `.env.example` alignés. `Workspace` supprimé (remplacé par `NotePage`) |
-| 1 — Notes persistées | 🟡 | CRUD, validation et tests faits ; **CI GitHub Actions absente** |
+| 1 — Notes persistées | ✅ | CRUD, validation, tests ; CI GitHub Actions en place (2026-09-28) |
 | 2 — Front branché | ✅ | React Router (data router) + TanStack Query, plus de données mockées |
 | 3 — Auth | ✅ | JWT en cookie httpOnly, guard global, argon2, `RequireAuth`, gestion du 401 |
 | 4 — Vaults | ✅ | Notes rattachées à un vault, vault par défaut, e2e d'isolation entre utilisateurs |
-| 5 — Markdown + recherche | ✅ | react-markdown + remark-gfm, recherche `ILIKE`. Démo manuelle des UC MVP à faire |
+| 5 — Markdown + recherche | ✅ | react-markdown + remark-gfm, recherche `ILIKE`. UC MVP vérifiés dans un navigateur (2026-09-28) |
 | 6 — Wikilinks & backlinks | ✅ | Parser testé, index `NoteLink`, renommage qui réécrit les références |
 | 7 — Knowledge graph | ✅ | `react-force-graph-2d` (N-13 → option a). Fluidité à ~500 notes non mesurée |
 | 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri |
 | 9 — Compte & robustesse | ✅ | `PATCH /auth/password`, rate limiting, page Settings, tests front. `packages/shared` pas créé : seuls les types DTO et le parser Markdown (`apps/web/src/lib/markdown.ts`, miroir de l'API) sont dupliqués |
-| 10+ | ⬜ | |
+| 10 — Docker & déploiement | ⬜ | Préparée (§L) : migrations sur disque, `trust proxy`, Dockerfiles, compose prod. Bloquée par §N-18 |
+| 11+ | ⬜ | Electron (14) préparé en §L ; mobile en attente de §N-19 |
 
 Règles quand on demande « implémente la prochaine fonctionnalité de Lily » :
 1. Prendre la première phase non terminée, la découper en étapes d'un commit chacune, les annoncer avant de coder.
@@ -688,3 +718,7 @@ Règles quand on demande « implémente la prochaine fonctionnalité de Lily » 
 **N-16 — Langue de l'interface.** Le prototype mélange anglais (« Edit », « Save », « Explorer ») et français (« Veuillez sélectionner une note »). → **À décider** : UI en français, en anglais, ou i18n plus tard (i18n = hors MVP).
 
 **N-17 — Titre de note obligatoire et unique.** Nécessaire pour les wikilinks. Alternative : autoriser les doublons et lier par id (`[[id]]`) — illisible. → *Reco* : unique par vault, insensible à la casse, dès le MVP (évite une migration de données plus tard).
+
+**N-18 — Hébergement de la Phase 10.** (a) VPS (Hetzner, OVH…) + Docker Compose + Caddy : quelques euros par mois, tout sous contrôle, formateur (Linux, TLS, sauvegardes), mais maintenance à sa charge. (b) PaaS (Render, Railway, Fly.io) : déploiement depuis Git, base managée, moins à apprendre sur l'infra, coût et dépendance au fournisseur plus élevés. → *Reco* : (a), cohérent avec le compose existant et l'objectif pédagogique. **À décider.**
+
+**N-19 — Mobile.** (a) Web responsive seul (existant). (b) PWA installable : manifest + icônes, peu de code, pas d'offline. (c) Capacitor : réutilise le front dans une app de store, mais complique l'auth (origine `capacitor://`, même problème que N-15/N-9). (d) Application native : hors scope (§F). → *Reco* : (b) juste après la Phase 10, (c) seulement si une vraie présence en store devient utile. **À décider.**
