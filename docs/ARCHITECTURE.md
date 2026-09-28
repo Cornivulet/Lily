@@ -115,7 +115,20 @@ Identifiants : UUID. Dates : ISO 8601 (`createdAt`, `updatedAt`).
 
 ## Docker
 
-Aujourd'hui, Docker ne sert qu'à **PostgreSQL** en développement (`docker-compose.yml` : `postgres:17`, utilisateur, mot de passe et base `lily`, volume `postgres_data`). L'API et le front tournent directement sous Node pour un rechargement rapide. La conteneurisation de l'application est prévue en Phase 10 (voir [SPEC.md §L](SPEC.md#l-roadmap)).
+- **Développement** (`docker-compose.yml`) : seulement PostgreSQL (`postgres:17`, utilisateur, mot de passe et base `lily`). L'API et le front tournent sous Node pour un rechargement rapide.
+- **Production** (`docker-compose.prod.yml`, projet `lily-prod`) : toute l'application.
+
+```text
+Navigateur ──► web : Caddy (:80/:443) ─┬─ /api/* ──► api : NestJS (:3000) ──► postgres (non exposé)
+                  fichiers statiques ◄─┘                  ▲
+                                          migrate (job unique, avant l'API)
+```
+
+  Les images se construisent depuis la racine du dépôt (les workspaces npm partagent un seul lockfile) :
+  - `apps/api/Dockerfile` : cible `runtime` (dépendances de production seules, utilisateur non root, healthcheck sur `GET /api/health`) et cible `migrate` (CLI Prisma, `prisma db migrate`).
+  - `apps/web/Dockerfile` : build Vite, puis Caddy (`apps/web/Caddyfile`). Caddy sert les fichiers, renvoie `index.html` pour les routes du front, relaie `/api` et gère HTTPS quand `SITE_ADDRESS` est un domaine.
+
+  Front et API partagent la même origine, comme avec le proxy Vite en dev : le cookie de session fonctionne sans CORS. Mode d'emploi : [DEVELOPMENT.md](DEVELOPMENT.md#stack-de-production-docker).
 
 ## Tests
 

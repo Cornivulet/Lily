@@ -13,7 +13,7 @@ Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). L
 
 | Zone | État | Détail |
 |---|---|---|
-| Monorepo | ✅ | npm workspaces `apps/*` (aucun `packages/*` pour l'instant) ; scripts racine `dev`, `db:up`, `db:update`, `build`, `lint`, `test`, `test:e2e` |
+| Monorepo | ✅ | npm workspaces `apps/*` (aucun `packages/*` pour l'instant) ; scripts racine `dev`, `db:up`, `db:migrate`, `db:update`, `build`, `lint`, `test`, `test:e2e` |
 | `apps/api` | ✅ | NestJS 12 (ESM), préfixe `/api`, `ValidationPipe` (class-validator), Vitest, oxlint. Modules `auth`, `users`, `vaults`, `notes`, `folders`, `links`, `tags` |
 | Prisma | ✅ | Prisma Next `8.0.0-rc` ; contrat `src/prisma/contract.prisma` : `User`, `Vault`, `Folder`, `Note`, `NoteLink`, `Tag`, `NoteTag` |
 | Auth | ✅ | JWT en cookie httpOnly, guard global (`@Public()` pour les exceptions), argon2, rate limiting sur register/login/password |
@@ -24,7 +24,8 @@ Ce qui **existe réellement** (à ne pas confondre avec ce qui est envisagé). L
 | CI | ✅ | GitHub Actions (`.github/workflows/ci.yml`) : lint, tests unitaires API et web, build, e2e sur un service PostgreSQL 17, à chaque push et PR |
 | Documentation | ✅ | `README.MD`, `docs/FEATURES.md`, `docs/ARCHITECTURE.md`, `docs/DEVELOPMENT.md` |
 | PostgreSQL | ✅ | `docker-compose.yml` : service `postgres:17` (user/pass/db `lily`), port 5432 |
-| Déploiement | ⬜ | Rien de déployé ; Phase 10 préparée en §L (bloquée par §N-18) |
+| Docker | ✅ | Images API (runtime + job de migration) et web (Caddy), `docker-compose.prod.yml`, migrations versionnées, testés en CI |
+| Déploiement | ⬜ | Rien de déployé : local uniquement pour l'instant (§N-18) |
 
 ---
 
@@ -647,7 +648,9 @@ Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 
 
 ## M. État d'avancement & règles pour l'IA
 
-**Prochaine étape : Phase 10** (Docker & déploiement, étapes détaillées en §L), après avoir tranché §N-18.
+**Prochaine étape** : la Phase 10 est faite jusqu'à l'étape 5 (stack Docker testée en local et en CI). L'étape 6 (déploiement public) attend un serveur et un domaine (§N-18). En attendant : **Phase 11** (confort) ou PWA (§N-19, à décider).
+
+Phase 10, 2026-09-28 : la stack `docker-compose.prod.yml` a passé la recette navigateur complète (46/46) sur `http://localhost:8080`, avec cookie `Secure`, migrations au démarrage, persistance après redémarrage, et rate limiting par IP client derrière le proxy (vérifié).
 
 Mis à jour le 2026-09-28. Vérifié localement et en CI : `npm run lint`, `npm run build`, `npm test` (API : 9 tests unitaires ; web : 15 tests), `npm run test:e2e` (13 tests). **Recette navigateur** (Chromium piloté par Playwright, hors dépôt) : 46 vérifications couvrant les UC-01 à 04, 10 à 13, 20 à 25, 30 à 34, 40, 41 et 50, plus le responsive à 390 px. Aucune erreur JavaScript en console. Elle a révélé et fait corriger : l'absence totale de style du Markdown rendu (titres, listes, code, tableaux, liens fantômes et tags indistincts, UC-30 2a), des états vides affichés pendant le chargement des backlinks et du graphe local, et des requêtes 404 après la suppression d'une note.
 
@@ -667,7 +670,7 @@ Mis à jour le 2026-09-28. Vérifié localement et en CI : `npm run lint`, `npm 
 | 7 — Knowledge graph | ✅ | `react-force-graph-2d` (N-13 → option a). Fluidité à ~500 notes non mesurée |
 | 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri. Unicité des noms entre dossiers frères ajoutée le 2026-09-28 (index `coalesce(parentId, '')`, 409) |
 | 9 — Compte & robustesse | ✅ | `PATCH /auth/password`, rate limiting, page Settings, tests front. `packages/shared` pas créé : seuls les types DTO et le parser Markdown (`apps/web/src/lib/markdown.ts`, miroir de l'API) sont dupliqués |
-| 10 — Docker & déploiement | ⬜ | Préparée (§L) : migrations sur disque, `trust proxy`, Dockerfiles, compose prod. Bloquée par §N-18 |
+| 10 — Docker & déploiement | 🟡 | Étapes 1 à 5 faites : migrations versionnées, `trust proxy`, `GET /api/health`, Dockerfiles, compose prod, job CI `docker`. Étape 6 (VPS, domaine, HTTPS, sauvegardes planifiées) en attente de §N-18 |
 | 11+ | ⬜ | Electron (14) préparé en §L ; mobile en attente de §N-19 |
 
 Règles quand on demande « implémente la prochaine fonctionnalité de Lily » :
@@ -718,6 +721,6 @@ Règles quand on demande « implémente la prochaine fonctionnalité de Lily » 
 
 **N-17 — Titre de note obligatoire et unique.** Nécessaire pour les wikilinks. Alternative : autoriser les doublons et lier par id (`[[id]]`) — illisible. → *Reco* : unique par vault, insensible à la casse, dès le MVP (évite une migration de données plus tard).
 
-**N-18 — Hébergement de la Phase 10.** (a) VPS (Hetzner, OVH…) + Docker Compose + Caddy : quelques euros par mois, tout sous contrôle, formateur (Linux, TLS, sauvegardes), mais maintenance à sa charge. (b) PaaS (Render, Railway, Fly.io) : déploiement depuis Git, base managée, moins à apprendre sur l'infra, coût et dépendance au fournisseur plus élevés. → *Reco* : (a), cohérent avec le compose existant et l'objectif pédagogique. **À décider.**
+**N-18 — Hébergement de la Phase 10.** (a) VPS (Hetzner, OVH…) + Docker Compose + Caddy : quelques euros par mois, tout sous contrôle, formateur (Linux, TLS, sauvegardes), mais maintenance à sa charge. (b) PaaS (Render, Railway, Fly.io) : déploiement depuis Git, base managée, moins à apprendre sur l'infra, coût et dépendance au fournisseur plus élevés. → *Reco* : (a), cohérent avec le compose existant et l'objectif pédagogique. **Décidé le 2026-09-28 : local uniquement pour l'instant** (ni serveur ni domaine). La stack est prête pour (a) : il suffira de `SITE_ADDRESS=<domaine>` sur un VPS.
 
 **N-19 — Mobile.** (a) Web responsive seul (existant). (b) PWA installable : manifest + icônes, peu de code, pas d'offline. (c) Capacitor : réutilise le front dans une app de store, mais complique l'auth (origine `capacitor://`, même problème que N-15/N-9). (d) Application native : hors scope (§F). → *Reco* : (b) juste après la Phase 10, (c) seulement si une vraie présence en store devient utile. **À décider.**

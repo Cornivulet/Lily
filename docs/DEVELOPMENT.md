@@ -57,6 +57,32 @@ Le schéma évolue par **migrations versionnées**, les mêmes en dev, en test, 
 
 Pour prototyper, `npm run db:update` aligne directement la base de dev sur le contrat, sans migration. Il faut quand même planifier la migration avant de commiter. Documentation de l'outil : `apps/api/prisma-next.md`.
 
+## Stack de production (Docker)
+
+`docker-compose.prod.yml` fait tourner Lily comme en production, sur n'importe quelle machine qui a Docker (Node n'est pas nécessaire) :
+
+| Service | Image | Rôle |
+|---|---|---|
+| `postgres` | `postgres:17` | Base de données, non exposée hors de Docker, volume `postgres_data` |
+| `migrate` | `apps/api/Dockerfile`, cible `migrate` | Applique les migrations en attente, puis s'arrête |
+| `api` | `apps/api/Dockerfile` | API NestJS (`NODE_ENV=production`, utilisateur non root). Démarre après `migrate` |
+| `web` | `apps/web/Dockerfile` | Caddy : sert le front et relaie `/api` vers `api`. Démarre quand l'API est « healthy » |
+
+```bash
+cp .env.example .env     # renseigner POSTGRES_PASSWORD et JWT_SECRET (openssl rand -hex …)
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml ps        # état ; `logs -f api` pour les journaux
+```
+
+Puis ouvrir `http://localhost` (ou `http://localhost:<HTTP_PORT>`).
+
+- Le projet Compose s'appelle `lily-prod` : ses conteneurs et volumes sont séparés de la base de développement.
+- **Mise à jour** : `git pull` puis la même commande `up -d --build`. Les nouvelles migrations sont appliquées automatiquement avant le redémarrage de l'API.
+- **Arrêt** : `docker compose -f docker-compose.prod.yml down`. Avec `-v`, **les données sont supprimées**.
+- **Sauvegarde** : `docker compose -f docker-compose.prod.yml exec -T postgres pg_dump -U lily lily > lily-$(date +%F).sql`.
+- **HTTPS** : sur un serveur dont le nom de domaine pointe vers la machine, mettre `SITE_ADDRESS=lily.example.com` (ports 80 et 443 ouverts). Caddy obtient et renouvelle alors les certificats. En `NODE_ENV=production`, le cookie de session est `Secure` : hors `localhost`, Lily doit donc être servie en HTTPS.
+- L'image `migrate` pèse environ 2,9 Go, car le CLI de Prisma Next (RC) est lourd. Elle ne sert qu'au démarrage ; l'image de l'API fait environ 570 Mo et celle du front environ 90 Mo.
+
 ## Qualité
 
 | Commande (à la racine) | Effet |
@@ -101,14 +127,18 @@ Un commit = une étape cohérente qui passe lint et tests.
 
 ## CI
 
-`.github/workflows/ci.yml` s'exécute sur chaque push et chaque pull request. Une seule tâche sur `ubuntu-latest`, avec Node 24 et un service `postgres:17` configuré comme le `docker-compose.yml` :
+`.github/workflows/ci.yml` s'exécute sur chaque push et chaque pull request. Deux tâches en parallèle sur `ubuntu-latest`.
+
+**`check`**, avec Node 24 et un service `postgres:17` configuré comme le `docker-compose.yml` :
 
 1. `npm ci`
 2. lint
 3. tests unitaires API
 4. tests unitaires web
 5. build
-6. tests e2e (sur la base `lily_test`, créée par la suite elle-même)
+6. tests e2e (sur la base `lily_test`, construite par les migrations)
+
+**`docker`** : construit les images de production, démarre `docker-compose.prod.yml` (migrations, API healthy, Caddy) et appelle le front et `/api/health` à travers Caddy.
 
 Un nouveau push sur la même branche annule l'exécution en cours. Résultats : onglet **Actions** du dépôt, ou `gh run list` / `gh run watch`.
 

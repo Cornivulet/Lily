@@ -56,6 +56,13 @@ Ouvrir http://localhost:5173 et créer un compte.
 | `npm run test:e2e` | tests e2e de l'API sur une base `lily_test` dédiée |
 | `npm run build` | build de production des deux applications |
 
+Toute l'application en conteneurs, comme en production (seul Docker est nécessaire) :
+
+```bash
+cp .env.example .env                     # puis renseigner les secrets
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
 Guide complet : [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
 
 ## Documentation
