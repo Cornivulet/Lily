@@ -64,7 +64,7 @@ Rendu avec [react-markdown](https://github.com/remarkjs/react-markdown) et GFM :
 ## Dossiers
 
 - Bouton « Nouveau dossier » de la sidebar, puis le menu « … » d'un dossier : nouvelle note ici, nouveau sous-dossier, renommer, supprimer.
-- Imbrication illimitée. ⚠️ Deux dossiers frères peuvent aujourd'hui porter le même nom, alors que la spec (§G) prévoit l'unicité : écart connu, voir [SPEC.md §M](SPEC.md#m-état-davancement--règles-pour-lia).
+- Imbrication illimitée. Deux dossiers frères (même parent, ou tous deux à la racine) ne peuvent pas porter le même nom (la casse compte) : « Un dossier porte déjà ce nom à cet endroit ». Même règle pour un renommage.
 - **Déplacer une note** : menu « … » de la note → « Déplacer vers… » → un dossier ou la racine du vault.
 - **Supprimer un dossier** : seulement s'il est vide (ni notes ni sous-dossiers). Sinon : « Déplacez ou supprimez d'abord le contenu du dossier ».
 

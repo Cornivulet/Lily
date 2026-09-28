@@ -39,6 +39,9 @@ model Folder {
   createdAt temporal.createdAtString()
   updatedAt temporal.updatedAtString()
 
+  // Sibling folders have distinct names; coalesce() makes root folders
+  // (parentId NULL) siblings too, as NULLs never collide in a unique index.
+  @@index(expression: "\"vaultId\", coalesce(\"parentId\", ''), name", unique: true, name: "folders_vault_parent_name")
   @@index([vaultId])
   @@map("folders")
 }

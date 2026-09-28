@@ -647,12 +647,11 @@ Dépendances clés : 1 → 2 → 3 → 4 → 5 (MVP linéaire) ; 6 dépend de 4 
 
 ## M. État d'avancement & règles pour l'IA
 
-**Prochaine étape : Phase 10** (Docker & déploiement, étapes détaillées en §L), après avoir tranché §N-18. Avant, petit correctif : unicité des noms de dossiers (écart ci-dessous).
+**Prochaine étape : Phase 10** (Docker & déploiement, étapes détaillées en §L), après avoir tranché §N-18.
 
 Mis à jour le 2026-09-28. Vérifié localement et en CI : `npm run lint`, `npm run build`, `npm test` (API : 9 tests unitaires ; web : 15 tests), `npm run test:e2e` (13 tests). **Recette navigateur** (Chromium piloté par Playwright, hors dépôt) : 46 vérifications couvrant les UC-01 à 04, 10 à 13, 20 à 25, 30 à 34, 40, 41 et 50, plus le responsive à 390 px. Aucune erreur JavaScript en console. Elle a révélé et fait corriger : l'absence totale de style du Markdown rendu (titres, listes, code, tableaux, liens fantômes et tags indistincts, UC-30 2a), des états vides affichés pendant le chargement des backlinks et du graphe local, et des requêtes 404 après la suppression d'une note.
 
 Écarts connus entre la spec et le code :
-- **Unicité des dossiers** : §G prévoit unique(`vaultId`, `parentId`, `name`), mais le code accepte deux dossiers frères de même nom. Bug à corriger (index unique qui gère `parentId` NULL + 409 dans le service).
 - **Unicité des vaults** sensible à la casse (« Travail » ≠ « travail »), alors que les titres de notes ne le sont pas. Conforme à §G, mais incohérent pour l'utilisateur : à trancher si ça gêne.
 - `PATCH /auth/password` renvoie 401 quand le mot de passe actuel est faux (le front ne déconnecte pas pour autant). §H ne précise pas ce code ; 400 serait plus juste sémantiquement.
 
@@ -666,7 +665,7 @@ Mis à jour le 2026-09-28. Vérifié localement et en CI : `npm run lint`, `npm 
 | 5 — Markdown + recherche | ✅ | react-markdown + remark-gfm, recherche `ILIKE`. UC MVP vérifiés dans un navigateur (2026-09-28) |
 | 6 — Wikilinks & backlinks | ✅ | Parser testé, index `NoteLink`, renommage qui réécrit les références |
 | 7 — Knowledge graph | ✅ | `react-force-graph-2d` (N-13 → option a). Fluidité à ~500 notes non mesurée |
-| 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri |
+| 8 — Dossiers & tags | ✅ | Arbre `parentId`, tags `#` extraits du contenu, filtres et tri. Unicité des noms entre dossiers frères ajoutée le 2026-09-28 (index `coalesce(parentId, '')`, 409) |
 | 9 — Compte & robustesse | ✅ | `PATCH /auth/password`, rate limiting, page Settings, tests front. `packages/shared` pas créé : seuls les types DTO et le parser Markdown (`apps/web/src/lib/markdown.ts`, miroir de l'API) sont dupliqués |
 | 10 — Docker & déploiement | ⬜ | Préparée (§L) : migrations sur disque, `trust proxy`, Dockerfiles, compose prod. Bloquée par §N-18 |
 | 11+ | ⬜ | Electron (14) préparé en §L ; mobile en attente de §N-19 |

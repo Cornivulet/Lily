@@ -176,4 +176,37 @@ describe('Links, tags, folders & graph (e2e)', () => {
       .send({ title: 'x', folderId: parent.body.id })
       .expect(404);
   });
+
+  it('keeps sibling folder names unique', async () => {
+    const { agent, user } = await registerUser(app);
+    const folders = `/api/vaults/${user.defaultVaultId}/folders`;
+    const root = await agent
+      .post(folders)
+      .send({ name: 'Projets' })
+      .expect(201);
+    await agent.post(folders).send({ name: 'Projets' }).expect(409);
+
+    const child = await agent
+      .post(folders)
+      .send({ name: 'Projets', parentId: root.body.id })
+      .expect(201);
+    await agent
+      .post(folders)
+      .send({ name: 'Projets', parentId: root.body.id })
+      .expect(409);
+
+    const other = await agent
+      .post(folders)
+      .send({ name: 'Archives' })
+      .expect(201);
+    await agent
+      .patch(`/api/folders/${other.body.id}`)
+      .send({ name: 'Projets' })
+      .expect(409);
+    // Moving it next to a same-named folder is refused too.
+    await agent
+      .patch(`/api/folders/${child.body.id}`)
+      .send({ parentId: null })
+      .expect(409);
+  });
 });

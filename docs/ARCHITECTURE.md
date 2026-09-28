@@ -104,7 +104,7 @@ User 1──N Vault 1──N Note N──0..1 Folder (arbre via parentId)
 |---|---|---|
 | `users` | Comptes | `email` unique (stocké en minuscules) |
 | `vaults` | Espaces isolés | unique (`ownerId`, `name`) ; supprimé avec l'utilisateur (cascade) |
-| `folders` | Rangement hiérarchique | `parentId` → `folders` (`RESTRICT` : pas de suppression d'un dossier non vide) |
+| `folders` | Rangement hiérarchique | unique (`vaultId`, `coalesce(parentId, '')`, `name`) : noms uniques entre frères, racine comprise ; `parentId` → `folders` (`RESTRICT` : pas de suppression d'un dossier non vide) |
 | `notes` | Notes Markdown | unique (`vaultId`, `lower(title)`) ; `folderId` → `folders` (`RESTRICT`) |
 | `note_links` | Index dérivé des `[[liens]]` | unique (`sourceNoteId`, `targetTitle`) ; source en cascade, cible `SET NULL` (le lien devient fantôme) |
 | `tags` / `note_tags` | Tags extraits du contenu | unique (`vaultId`, `name`) ; cascades |

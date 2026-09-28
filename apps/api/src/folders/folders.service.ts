@@ -6,6 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DB, type Db } from '../prisma/prisma.module.js';
+import { isUniqueViolation } from '../common/db-errors.js';
 import { toIso } from '../common/dates.js';
 import { VaultsService } from '../vaults/vaults.service.js';
 import { definedOnly } from '../common/objects.js';
@@ -28,6 +29,18 @@ function toFolderDto(folder: FolderRow): FolderDto {
     createdAt: toIso(folder.createdAt),
     updatedAt: toIso(folder.updatedAt),
   };
+}
+
+/** Sibling folders have distinct names (unique index in the contract). */
+async function withUniqueName<T>(write: () => PromiseLike<T>): Promise<T> {
+  try {
+    return await write();
+  } catch (error) {
+    if (isUniqueViolation(error)) {
+      throw new ConflictException('Un dossier porte déjà ce nom à cet endroit');
+    }
+    throw error;
+  }
 }
 
 @Injectable()
@@ -54,11 +67,9 @@ export class FoldersService {
   ): Promise<FolderDto> {
     await this.vaults.findOwnedOrThrow(userId, vaultId);
     if (parentId) await this.findInVaultOrThrow(vaultId, parentId);
-    const folder = await this.db.orm.public.Folder.create({
-      vaultId,
-      name,
-      parentId,
-    });
+    const folder = await withUniqueName(() =>
+      this.db.orm.public.Folder.create({ vaultId, name, parentId }),
+    );
     return toFolderDto(folder);
   }
 
@@ -72,9 +83,11 @@ export class FoldersService {
       await this.findInVaultOrThrow(folder.vaultId, changes.parentId);
       await this.assertNotDescendant(folderId, changes.parentId);
     }
-    const updated = await this.db.orm.public.Folder.where({
-      id: folderId,
-    }).update(definedOnly(changes));
+    const updated = await withUniqueName(() =>
+      this.db.orm.public.Folder.where({ id: folderId }).update(
+        definedOnly(changes),
+      ),
+    );
     return toFolderDto(updated!);
   }
 
