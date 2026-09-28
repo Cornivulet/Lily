@@ -1,0 +1,10 @@
+# Docker build context = repository root. Keep it small and free of secrets.
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+**/.env
+**/.env.*
+!**/.env.example
+.git
+.github
+docs

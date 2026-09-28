@@ -58,6 +58,12 @@ describe('Auth (e2e)', () => {
       .expect(400);
   });
 
+  it('answers the health check without a session', async () => {
+    await request(app.getHttpServer())
+      .get('/api/health')
+      .expect(200, { status: 'ok' });
+  });
+
   it('protects every other route', async () => {
     await request(app.getHttpServer()).get('/api/vaults').expect(401);
   });

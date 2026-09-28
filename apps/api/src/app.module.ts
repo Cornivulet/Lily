@@ -8,6 +8,7 @@ import { NotesModule } from './notes/notes.module.js';
 import { FoldersModule } from './folders/folders.module.js';
 import { LinksModule } from './links/links.module.js';
 import { TagsModule } from './tags/tags.module.js';
+import { HealthController } from './health.controller.js';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TagsModule } from './tags/tags.module.js';
     LinksModule,
     TagsModule,
   ],
+  controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
