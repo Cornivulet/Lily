@@ -1,0 +1,21 @@
+# Serves the built front and proxies /api to the API: one origin, so the
+# session cookie works without CORS.
+# SITE_ADDRESS: ":80" (plain HTTP, default) or a domain such as
+# "lily.example.com", for which Caddy obtains and renews HTTPS certificates.
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	handle /api/* {
+		# Sets X-Forwarded-For to the real client IP (the API trusts one proxy).
+		reverse_proxy {$API_UPSTREAM:api:3000}
+	}
+
+	handle {
+		root * /srv
+		# Vite fingerprints assets: they never change under the same name.
+		header /assets/* Cache-Control "public, max-age=31536000, immutable"
+		# Client-side routes (/vaults/…) all load index.html.
+		try_files {path} /index.html
+		file_server
+	}
+}
