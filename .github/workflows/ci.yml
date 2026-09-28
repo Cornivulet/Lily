@@ -59,3 +59,32 @@ jobs:
 
       - name: E2E tests (API + PostgreSQL)
         run: npm run test:e2e
+
+  # Builds the production images and checks that the whole stack starts:
+  # migrations applied, API healthy, front and /api served through Caddy.
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      POSTGRES_PASSWORD: ci-password
+      JWT_SECRET: ci-secret
+      HTTP_PORT: 8080
+      HTTPS_PORT: 8443
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build and start the production stack
+        run: docker compose -f docker-compose.prod.yml up -d --build --wait web
+
+      - name: Smoke test through Caddy
+        run: |
+          curl -fsS http://localhost:8080/api/health
+          curl -fsS -o /dev/null http://localhost:8080/vaults
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose -f docker-compose.prod.yml logs
+
+      - name: Stop the stack
+        if: always()
+        run: docker compose -f docker-compose.prod.yml down -v
